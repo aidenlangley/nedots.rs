@@ -2,7 +2,7 @@
 
 [![builds.sr.ht status](https://builds.sr.ht/~nedia.svg)](https://builds.sr.ht/~nedia?)
 
-[sourcehut](https://git.sr.ht/~nedia/nedots.rs) | [github](https://github.com/aidenlangley/nedots.rs)
+[sourcehut](https://git.sr.ht/~nedia/nedots.rs) | [github](https://github.com/aidenlangley/nedots.rs) | [crates.io](https://crates.io/crates/nedots)
 
 A smart, safe and intuitive dotfiles management tool.
 
