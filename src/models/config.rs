@@ -8,15 +8,18 @@ use std::{
 
 #[derive(Debug, Default, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Config {
+    #[serde(skip, default)]
     pub root: PathBuf,
+
+    #[serde(skip, default)]
     pub dots_dir: PathBuf,
+
+    #[serde(skip, default)]
     pub backup_dir: PathBuf,
+
     pub remote: String,
     pub sources: Vec<PathBuf>,
     pub git_repos: Vec<GitRepo>,
-
-    #[serde(skip)]
-    pub _systemd_services: Vec<String>,
 }
 
 pub(crate) const DEFAULT_DOTS_DIR: &str = "dots";
@@ -38,9 +41,9 @@ pub(crate) fn read(path: &Path) -> anyhow::Result<Config> {
 
 pub(crate) fn get_sample() -> Config {
     Config {
-        root: ".nedots".into(),
-        dots_dir: "dots".into(),
-        backup_dir: "backups".into(),
+        root: PathBuf::default(),
+        dots_dir: PathBuf::default(),
+        backup_dir: PathBuf::default(),
         remote: "git@git.sr.ht:~nedia/nedots.rs".to_string(),
         sources: vec![
             ".config/bspwm".into(),
@@ -53,7 +56,6 @@ pub(crate) fn get_sample() -> Config {
             remote: "git@git.sr.ht:~nedia/config.nvim".to_string(),
             path: ".config/nvim".into(),
         }],
-        _systemd_services: vec![],
     }
 }
 
@@ -74,13 +76,13 @@ impl Config {
             Err(err) => log_error(err),
         }
 
-        self.dots_dir = self.root.join(self.dots_dir);
+        self.dots_dir = self.root.join(DEFAULT_DOTS_DIR);
         match self.dots_dir.resolve_path() {
             Ok(path) => self.dots_dir = path,
             Err(err) => log_error(err),
         }
 
-        self.backup_dir = self.root.join(self.backup_dir);
+        self.backup_dir = self.root.join(DEFAULT_BACKUP_DIR);
         match self.backup_dir.resolve_path() {
             Ok(path) => self.backup_dir = path,
             Err(err) => log_error(err),

@@ -15,20 +15,20 @@ pub trait Initialize<T = Config> {
 impl<T: ValidateConfig> Initialize<Config> for T {
     fn init(&self, root_args: &super::RootCmd) -> anyhow::Result<Config> {
         let mut config: Config;
-        if let Some(cfg_path) = &root_args.cfg_path {
-            config = config::read(cfg_path)?;
+
+        let xdg_config_home: Option<&'static str> = option_env!("XDG_CONFIG_HOME");
+        if let Some(path) = xdg_config_home {
+            config = config::read(&Path::new(path).join(&root_args.config))?;
         } else {
-            let path = Path::new(&root_args.root).join(Path::new(&root_args.cfg_file));
-            config = config::read(&path)?;
-            config.root = Path::new(&root_args.root).to_path_buf();
+            let path = Path::new(env!("HOME")).join(".config");
+            config = config::read(&path.join(&root_args.config))?;
         }
 
-        if let Some(dots_dir) = &root_args.dots {
-            config.dots_dir = Path::new(dots_dir).to_path_buf();
-        }
-
-        if let Some(backup_dir) = &root_args.backups {
-            config.backup_dir = Path::new(backup_dir).to_path_buf();
+        let xdg_data_home: Option<&'static str> = option_env!("XDG_DATA_HOME");
+        if let Some(path) = xdg_data_home {
+            config.root = Path::new(path).join("nedots");
+        } else {
+            config.root = Path::new(".local/share/nedots").to_path_buf();
         }
 
         log::debug!("Raw config `{:#?}`", config);

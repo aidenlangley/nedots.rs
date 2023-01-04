@@ -1,6 +1,9 @@
 use crate::{
     models::{config::Config, git_repo::GitRepo},
-    utils::{paths::MakeDirs, spinner::Spinner},
+    utils::{
+        paths::{MakeDirs, ResolvePath},
+        spinner::Spinner,
+    },
     RootCmd,
 };
 use std::path::{Path, PathBuf};
@@ -18,47 +21,45 @@ pub(crate) struct InitCmd {
 
 impl super::Initialize for InitCmd {
     fn init(&self, root_args: &RootCmd) -> anyhow::Result<Config> {
-        let root_path = Path::new(&root_args.root);
-        if !root_path.exists() {
-            log::trace!("Initializing {} @ {}...", &self.remote, &root_args.root);
+        let root_dir: PathBuf;
+
+        let xdg_data_home: Option<&'static str> = option_env!("XDG_DATA_HOME");
+        if let Some(path) = xdg_data_home {
+            root_dir = Path::new(path).join("nedots");
+        } else {
+            root_dir = Path::new(env!("HOME")).join(".local/share/nedots");
+        }
+
+        if !root_dir.exists() {
+            log::trace!("Initializing {} @ {}...", &self.remote, &root_dir.display());
             let spinner = Spinner::start();
-            let repo = GitRepo::new(&self.remote, Path::new(&root_args.root));
+            let repo = GitRepo::new(&self.remote, &root_dir);
 
             spinner.set_msg(&format!(
                 " Initializing {} @ {}...",
                 console::style(&self.remote).blue(),
-                console::style(&root_args.root).blue(),
+                console::style(&root_dir.display()).blue(),
             ));
             repo.clone()?;
             repo.init_submodules()?;
 
             spinner.finish();
         } else {
-            log::debug!("{} @ {} exists", self.remote, &root_args.root);
+            log::debug!("{} @ {} exists", self.remote, &root_dir.display());
         }
 
         if let Some(user) = &self.from_user {
-            migrate_user(user, &root_args.root, root_args.dots.as_ref())?;
+            migrate_user(user, &root_dir)?;
         }
 
         // Make backup directory
-        let mut path = Path::new(&root_args.root).to_path_buf();
-        if let Some(backups_dir) = &root_args.backups {
-            path.push(backups_dir);
-        } else {
-            path.push(crate::models::config::DEFAULT_BACKUP_DIR);
-        }
-
+        let path = Path::new(&root_dir).join(crate::models::config::DEFAULT_BACKUP_DIR);
         path.make_all_dirs()?;
 
-        let cfg_file = root_path.join(".nedots.yml");
+        let cfg_file = root_dir.join(".nedots.yml");
         if !cfg_file.exists() {
             // If .nedots.yml isn't yet present, we'll create an example file.
             log::trace!("Creating sample `{}`...", cfg_file.display());
-
-            let mut config = crate::models::config::get_sample();
-            config.root = root_path.to_path_buf();
-            config.remote = self.remote.clone();
 
             let yaml = serde_yaml::to_string(&crate::models::config::get_sample())?;
             std::fs::write(&cfg_file, yaml)?;
@@ -76,28 +77,19 @@ impl super::Initialize for InitCmd {
 
 impl super::Run for InitCmd {}
 
-fn migrate_user(from_user: &str, root_dir: &str, dots_dir: Option<&PathBuf>) -> anyhow::Result<()> {
+fn migrate_user(from_user: &str, root_dir: &Path) -> anyhow::Result<()> {
     log::trace!("Migrating from `{}`", from_user);
 
-    let home = env!("HOME").strip_prefix('/').unwrap();
-    let mut path = Path::new(&format!("{}/{}", home, root_dir)).to_path_buf();
-    if let Some(dots_dir) = dots_dir {
-        path.push(dots_dir);
-    } else {
-        path.push(crate::models::config::DEFAULT_DOTS_DIR);
-    }
-
+    let path = root_dir.join(crate::models::config::DEFAULT_DOTS_DIR);
     let from_path = path.join(format!("home/{}", from_user));
-    let to_path = path.join(home);
+    let to_path = crate::utils::join_paths(&path, Path::new(env!("HOME")));
 
-    let mut from_str = from_path.display().to_string();
-    let mut to_str = to_path.display().to_string();
-
-    from_str.insert(0, '/');
-    to_str.insert(0, '/');
-
-    log::trace!("Renaming `{}` -> `{}`", from_str, to_str);
-    std::fs::rename(from_str, to_str)?;
+    log::trace!(
+        "Renaming `{}` -> `{}`",
+        from_path.display(),
+        to_path.display()
+    );
+    std::fs::rename(from_path, to_path)?;
 
     Ok(())
 }

@@ -1,33 +1,15 @@
 use super::{Execute, Run};
 use crate::models::config::Config;
 use clap_verbosity_flag::Verbosity;
-use std::path::PathBuf;
 
-const DEFAULT_ROOT: &str = ".nedots";
-const DEFAULT_CFG_FILE: &str = ".nedots.yml";
+const DEFAULT_CONFIG: &str = "nedots/nedots.yml";
 
 #[derive(Debug, clap::Parser)]
 #[command(author, about, version, arg_required_else_help(true))]
 pub struct RootCmd {
-    #[arg(short, long, default_value = DEFAULT_ROOT)]
-    /// Root directory.
-    pub(crate) root: String,
-
     /// Custom config file.
-    #[arg(short, long = "cfg", default_value = DEFAULT_CFG_FILE)]
-    pub(crate) cfg_file: String,
-
-    #[arg(short = 'C', long = "cfgpath")]
-    /// Path to config file, if provided then root & cfg_file are discarded.
-    pub(crate) cfg_path: Option<PathBuf>,
-
-    #[arg(short, long)]
-    /// Where to store config files/(ne)dots.
-    pub(crate) dots: Option<PathBuf>,
-
-    #[arg(short, long)]
-    /// Where to store backups of config files/(ne)dots.
-    pub(crate) backups: Option<PathBuf>,
+    #[arg(short, long, default_value = DEFAULT_CONFIG)]
+    pub(crate) config: String,
 
     #[command(flatten)]
     pub verbose: Verbosity,
