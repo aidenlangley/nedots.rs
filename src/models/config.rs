@@ -44,15 +44,9 @@ pub(crate) fn get_sample() -> Config {
         root: PathBuf::default(),
         dots_dir: PathBuf::default(),
         backup_dir: PathBuf::default(),
-        remote: "git@git.sr.ht:~nedia/nedots.rs".to_string(),
-        sources: vec![
-            ".config/bspwm".into(),
-            ".profile".into(),
-            "/etc/hostname".into(),
-            "Wallpapers".into(),
-        ],
+        remote: "git@git.sr.ht:~nedia/nedots".to_string(),
+        sources: vec![".config/nedots".into()],
         git_repos: vec![GitRepo {
-            id: "nvim".to_string(),
             remote: "git@git.sr.ht:~nedia/config.nvim".to_string(),
             path: ".config/nvim".into(),
         }],

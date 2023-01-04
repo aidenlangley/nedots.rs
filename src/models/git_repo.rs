@@ -2,7 +2,6 @@ use std::path::{Path, PathBuf};
 
 #[derive(Debug, Default, Clone, serde::Serialize, serde::Deserialize)]
 pub struct GitRepo {
-    pub(crate) id: String,
     pub(crate) remote: String,
     pub(crate) path: PathBuf,
 }
@@ -10,7 +9,6 @@ pub struct GitRepo {
 impl GitRepo {
     pub(crate) fn new(remote: &str, path: &Path) -> Self {
         Self {
-            id: String::default(),
             remote: remote.to_string(),
             path: path.to_path_buf(),
         }
