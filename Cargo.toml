@@ -1,0 +1,26 @@
+[package]
+categories = ["command-line-utilities", "config"]
+documentation = "https://docs.rs/nedots"
+edition = "2021"
+keywords = ["dotfiles"]
+license = "MIT OR Apache-2.0"
+name = "nedots"
+repository = "https://git.sr.ht/~nedia/nedots.rs"
+version = "0.1.4"
+description = "A tool to manage configuration files/(ne)dots."
+
+[dependencies]
+anyhow = "1.0.66"
+chrono = { version = "0.4.23", default-features = false }
+clap = { version = "4.0.24", features = ["derive"] }
+clap-verbosity-flag = "2.0.0"
+clap_complete = "4.0.5"
+console = "0.15.2"
+dialoguer = "0.10.2"
+env_logger = "0.9.3"
+indicatif = "0.17.2"
+log = { version = "0.4.17", default-features = false }
+serde = { version = "1.0.147", features = ["derive"] }
+serde_yaml = "0.9.14"
+thiserror = "1.0.37"
+trash = "3.0.0"

@@ -1,0 +1,35 @@
+image: alpine/latest
+packages:
+  - rustup
+triggers:
+  - action: email
+    condition: failure
+    to: Aiden Langley <aiden@nedia.dev>
+secrets:
+  - f049bb15-5272-485e-b7ca-67b90598d980
+environment:
+  known_hosts: |
+    git.sr.ht ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMZvRd4EtM7R+IHVMWmDkVU3VLQTSwQDSAvW0t2Tkj60
+    git.sr.ht ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCj6y+cJlqK3BHZRLZuM+KP2zGPrh4H66DacfliU1E2DHAd1GGwF4g1jwu3L8gOZUTIvUptqWTkmglpYhFp4Iy4=
+  remote: git@git.sr.ht:~nedia/nedots.test
+  nedots_bin: nedots.rs/target/debug/nedots -vvvv
+tasks:
+  - rustup: |
+      rustup-init -y
+      echo "source $HOME/.cargo/env" >> .buildenv
+  - setup: |
+      rustup toolchain install stable
+      cd nedots.rs
+      rustup run stable cargo fetch
+  - stable: |
+      rustup default stable
+      cd nedots.rs
+      cargo build
+      chmod +x target/debug/nedots
+  - init: |
+      echo $known_hosts >> .ssh/known_hosts
+      ./$nedots_bin init --from-user aiden $remote
+  - install: ./$nedots_bin install
+  - backup: ./$nedots_bin backup
+  - clean: ./$nedots_bin clean --dots --backups --assumeyes
+  - sync: ./$nedots_bin sync --gather --nopush

@@ -1,0 +1,14 @@
+root: .nedots
+dots_dir: dots
+backup_dir: backups
+remote: git@git.sr.ht:~nedia/nedots
+sources:
+  - .config/bspwm
+  - .profile
+  - /etc/hostname
+  - Wallpapers
+git_repos:
+  - repo:
+    id: nvim
+    remote: git@git.sr.ht:~nedia/config.nvim
+    path: .config/nvim
