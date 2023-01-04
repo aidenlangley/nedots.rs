@@ -13,6 +13,11 @@ The builds run with the maximum level of verbosity, so everything it does is
 logged to `stdout`. The builds showcase all of the functionality - it's not the
 most tangible "demo", but it does give you a peek at what it does.
 
+## TODO
+
+- I'd avoid running this as `root`. I need to ensure that file operations are
+  carried out by the correct user.
+
 ## `nedots.yml`
 
 You can find the configuration file @ `$XDG_CONFIG_HOME/nedots/nedots.yml`. If
