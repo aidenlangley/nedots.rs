@@ -51,7 +51,6 @@ sources:
   - Wallpapers
 git_repos:
   - repo:
-    id: nvim
     remote: git@git.sr.ht:~nedia/config.nvim
     path: .config/nvim
 ```

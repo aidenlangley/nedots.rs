@@ -29,7 +29,9 @@ tasks:
   - init: |
       echo $known_hosts >> .ssh/known_hosts
       ./$nedots_bin init --from-user aiden $remote
-  - install: ./$nedots_bin install
+  - install: |
+      ./$nedots_bin install # Intentionally installing twice
+      ./$nedots_bin install
   - backup: ./$nedots_bin backup
   - clean: ./$nedots_bin clean --dots --backups --assumeyes
   - sync: ./$nedots_bin sync --gather --nopush
