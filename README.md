@@ -38,9 +38,6 @@ remote git repository, a list of directories or files, and a list of git submodu
 Here is a small example:
 
 ```yml
-root: .nedots
-dots_dir: dots
-backup_dir: backups
 remote: git@git.sr.ht:~nedia/nedots
 sources:
   - .config/bspwm
@@ -56,10 +53,11 @@ git_repos:
 
 ### sources
 
-Operations such as `install` will copy these files from `{root}/{dots_dir}/{source}`
-to `$HOME/{source}`.
+Operations such as `install` will copy these files from `$XDG_DATA_HOME/nedots/{source}`
+to `$HOME/{source}`. If `$XDG_DATA_HOME` is not set, then `$HOME/.local/share/nedots`
+is used.
 
-Conversely, `gather` will copy files from `$HOME/{source}` to `{root}/{dots_dir}/{source}`.
+Conversely, `gather` will copy files from `$HOME/{source}` to `$XDG_DATA_HOME/nedots/{source}`.
 
 Directories will be copied recursively. Paths can be owned by you, or another, but the correct
 permissions will be required at runtime to perform operations on paths that are not owned by
@@ -71,35 +69,24 @@ So you're new to this style of storing your dotfiles but the chances are you've
 got a git repository for storing your dotfiles. That's some of the work done already.
 
 ```sh
-# To set `nedots` up in its default location `$HOME/.nedots`
+# To set `nedots` up in its default location `$XDG_DATA_HOME/nedots` or `$HOME/.local/share/nedots`.
 nedots init <remote>
-
-# Or to choose your own location
-nedots --root $HOME/.dotfiles init <remote>
-
-# NOTE: Subsequent calls to `nedots` will need to be passed `--root $HOME/.dotfiles`
-# or `--cfgpath $HOME/.dotfiles/.nedots.yml`.
 ```
 
 Next, you'll need to edit `.nedots.yml` - `sources` specifically, so that `nedots sync`
-can collect your files. It'll then copy them to `$HOME/.nedots/dots`.
+can collect your files. It'll then copy them to `$XDG_DATA_HOME/nedots/dots`.
 
 ```sh
 # Recommend adding `--nopush` so `nedots` won't push these changes to remote.
-# You can review them first.
-# Gather is responsible for collecting your files.
+# You can review them first. Gather is responsible for collecting your files.
 nedots sync --gather --nopush
-
-# Or to sync to a different directory
-nedots --root $HOME/.dotfiles --dots <dir> sync --gather --nopush
-
 ```
 
 File structure will then look something like this:
 
 ```sh
-tree .nedots/dots -a
-.nedots.test/dots
+tree .local/share/nedots/dots -a
+.local/share/nedots/dots
 ├── etc
 │   └── hostname
 └── home
