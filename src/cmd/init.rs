@@ -66,6 +66,7 @@ impl super::Initialize for InitCmd {
             log::trace!("Creating sample `{}`...", config_file.display());
 
             let yaml = serde_yaml::to_string(&crate::models::config::get_sample())?;
+            config_dir.make_all_dirs()?;
             std::fs::write(&config_file, yaml)?;
 
             log::info!(
