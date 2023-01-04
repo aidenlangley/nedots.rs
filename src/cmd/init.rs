@@ -52,28 +52,8 @@ impl super::Initialize for InitCmd {
         let path = Path::new(&root_dir).join(crate::models::config::DEFAULT_BACKUP_DIR);
         path.make_all_dirs()?;
 
-        let config_dir: PathBuf;
-        let xdg_config_home: Option<&'static str> = option_env!("XDG_CONFIG_HOME");
-        if let Some(path) = xdg_config_home {
-            config_dir = Path::new(path).join("nedots");
-        } else {
-            config_dir = Path::new(env!("HOME")).join(".config/nedots");
-        }
-
-        let config_file = config_dir.join("nedots.yml");
-        if !config_file.exists() {
-            // If .nedots.yml isn't yet present, we'll create an example file.
-            log::trace!("Creating sample `{}`...", config_file.display());
-
-            let yaml = serde_yaml::to_string(&crate::models::config::get_sample())?;
-            config_dir.make_all_dirs()?;
-            std::fs::write(&config_file, yaml)?;
-
-            log::info!(
-                "🗒️ Sample config can be found @ {}",
-                console::style(config_file.display()).bold()
-            );
-        }
+        // Create `$XDG_CONFIG_HOME/nedots` & create a sample config file..
+        init_config()?;
 
         log::info!("✅ {}", console::style("Initialized!").bold());
         Ok(Config::default())
@@ -95,6 +75,33 @@ fn migrate_user(from_user: &str, root_dir: &Path) -> anyhow::Result<()> {
         to_path.display()
     );
     std::fs::rename(from_path, to_path)?;
+
+    Ok(())
+}
+
+fn init_config() -> anyhow::Result<()> {
+    let config_dir: PathBuf;
+    let xdg_config_home: Option<&'static str> = option_env!("XDG_CONFIG_HOME");
+    if let Some(path) = xdg_config_home {
+        config_dir = Path::new(path).join("nedots");
+    } else {
+        config_dir = Path::new(env!("HOME")).join(".config/nedots");
+    }
+
+    let config_file = config_dir.join("nedots.yml");
+    if !config_file.exists() {
+        // If .nedots.yml isn't yet present, we'll create an example file.
+        log::trace!("Creating sample `{}`...", config_file.display());
+
+        let yaml = serde_yaml::to_string(&crate::models::config::get_sample())?;
+        config_dir.make_all_dirs()?;
+        std::fs::write(&config_file, yaml)?;
+
+        log::info!(
+            "🗒️ Sample config can be found @ {}",
+            console::style(config_file.display()).bold()
+        );
+    }
 
     Ok(())
 }
