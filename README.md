@@ -13,19 +13,19 @@ The builds run with the maximum level of verbosity, so everything it does is
 logged to `stdout`. The builds showcase all of the functionality - it's not the
 most tangible "demo", but it does give you a peek at what it does.
 
-## `.nedots.yml`
+## `nedots.yml`
+
+You can find the configuration file @ `$XDG_CONFIG_HOME/nedots/nedots.yml`. If
+`$XDG_CONFIG_HOME` is not set, then `$HOME/.config/nedots/nedots.yml`.
 
 When you use `nedots`, you maintain a small file that contains the address of your
 remote git repository, a list of directories or files, and a list of git submodules.
 
-| Field      | Type            | Description                                                                                                         |
-| :--------- | :-------------- | :------------------------------------------------------------------------------------------------------------------ |
-| root       | `String`        | The root directory. Dotfiles are stored here, as well as backups.                                                   |
-| dots_dir   | `String`        | This directory is appended to root if relative. Dotfiles are stored here.                                           |
-| backup_dir | `String`        | This directory is also appended to root if relative. Backups are stored here.                                       |
-| remote     | `String`        | The remote `git` repository address. `https://` or `ssh` (`git@`) work, but `ssh` (read/write) should be preferred. |
-| sources    | `List<String>`  | A list of directories or files that `nedots` will manage.                                                           |
-| git_repos  | `List<GitRepo>` | A list of `GitRepo`, see `GitRepo` model below.                                                                     |
+| Field     | Type            | Description                                                                                                         |
+| :-------- | :-------------- | :------------------------------------------------------------------------------------------------------------------ |
+| remote    | `String`        | The remote `git` repository address. `https://` or `ssh` (`git@`) work, but `ssh` (read/write) should be preferred. |
+| sources   | `List<String>`  | A list of directories or files that `nedots` will manage.                                                           |
+| git_repos | `List<GitRepo>` | A list of `GitRepo`, see `GitRepo` model below.                                                                     |
 
 ### GitRepo
 
