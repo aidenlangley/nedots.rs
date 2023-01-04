@@ -1,9 +1,6 @@
 use crate::{
     models::{config::Config, git_repo::GitRepo},
-    utils::{
-        paths::{MakeDirs, ResolvePath},
-        spinner::Spinner,
-    },
+    utils::{paths::MakeDirs, spinner::Spinner},
     RootCmd,
 };
 use std::path::{Path, PathBuf};
@@ -20,7 +17,7 @@ pub(crate) struct InitCmd {
 }
 
 impl super::Initialize for InitCmd {
-    fn init(&self, root_args: &RootCmd) -> anyhow::Result<Config> {
+    fn init(&self, _: &RootCmd) -> anyhow::Result<Config> {
         let root_dir: PathBuf;
 
         let xdg_data_home: Option<&'static str> = option_env!("XDG_DATA_HOME");
