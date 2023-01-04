@@ -113,7 +113,6 @@ tree .local/share/nedots/dots -a
             └── wallhaven-zm9kpy.jpg
 
 7 directories, 14 files
-
 ```
 
 That's it! Now anytime you make changes to the files or folders defined in

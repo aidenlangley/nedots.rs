@@ -4,6 +4,7 @@ use crate::{
 };
 
 #[derive(Debug, clap::Parser)]
+/// Collect files & directories & sync with remote.
 pub(crate) struct SyncCmd {
     #[arg(short, long)]
     /// Gather dots before syncing.

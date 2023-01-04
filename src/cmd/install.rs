@@ -1,7 +1,7 @@
 use crate::{models::config::Config, utils::paths::ResolvePath};
 
 #[derive(Debug, clap::Args)]
-/// Install filese & directories from {root}/{dots_dir}/{source} to $HOME/{source}.
+/// Install `sources` -> `$XDG_CONFIG_HOME/{source}`
 pub(crate) struct InstallCmd {
     /// Only gather this source. Any unique portion of a path in `sources` is
     /// valid. E.g. given a list of [ "/home/user/.bashrc", "/home/user/.zshrc" ],

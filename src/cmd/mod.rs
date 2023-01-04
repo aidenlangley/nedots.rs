@@ -31,7 +31,7 @@ impl<T: ValidateConfig> Initialize<Config> for T {
             config.root = Path::new(env!("HOME")).join(".local/share/nedots");
         }
 
-        log::debug!("Raw config `{:#?}`", config);
+        log::debug!("Raw {:#?}", config);
         self.validate(config)
     }
 }

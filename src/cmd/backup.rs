@@ -2,10 +2,10 @@ use crate::{models::config::Config, utils::paths::MakeDirs};
 use std::path::{Path, PathBuf};
 
 #[derive(Debug, clap::Args)]
-/// Backup local configuration files/(ne)dots.
+/// Backup local configuration files/(ne)dots
 pub(crate) struct BackupCmd;
 
-// Use default `Config` validation.
+// Use default `Config` validation
 impl super::ValidateConfig for BackupCmd {}
 
 impl super::Run for BackupCmd {

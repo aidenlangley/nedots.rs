@@ -2,18 +2,18 @@ use crate::{models::config::Config, utils::paths::MakeDirs};
 use std::path::Path;
 
 #[derive(Debug, clap::Args)]
-/// Clean up `dots` & `backups`. Example: `nedots clean -db` to clean both.
+/// Clean up `dots` & `backups` - `nedots clean -db` to clean both
 pub(crate) struct CleanCmd {
     #[arg(short, long)]
-    /// Clean up `dots`.
+    /// Clean up `dots`
     dots: bool,
 
     #[arg(short, long)]
-    /// Clean up `backups`.
+    /// Clean up `backups`
     backups: bool,
 
     #[arg(short = 'y', long)]
-    /// Won't prompt you to confirm the operation when cleaning.
+    /// Won't prompt you to confirm the operation when cleaning
     assumeyes: bool,
 }
 
