@@ -131,9 +131,10 @@ them to remote.
 
 ## Install
 
-| OS/Method | Command                |
-| :-------- | :--------------------- |
-| Cargo     | `cargo install nedots` |
+| OS/Method       | Command                                                                    |
+| :-------------- | :------------------------------------------------------------------------- |
+| Cargo           | `cargo install nedots`                                                     |
+| GitHub/Releases | Download binary [here](https://github.com/aidenlangley/nedots.rs/releases) |
 
 <!-- | Arch      | `yay -S nedots`        | -->
 
