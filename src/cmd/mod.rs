@@ -28,7 +28,7 @@ impl<T: ValidateConfig> Initialize<Config> for T {
         if let Some(path) = xdg_data_home {
             config.root = Path::new(path).join("nedots");
         } else {
-            config.root = Path::new(".local/share/nedots").to_path_buf();
+            config.root = Path::new(env!("HOME")).join(".local/share/nedots");
         }
 
         log::debug!("Raw config `{:#?}`", config);
