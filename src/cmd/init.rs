@@ -3,7 +3,8 @@ use crate::{
     utils::{paths::MakeDirs, spinner::Spinner},
     RootCmd,
 };
-use std::path::{Path, PathBuf};
+use directories::BaseDirs;
+use std::path::Path;
 
 #[derive(Debug, clap::Args)]
 /// Initialize `nedots`
@@ -18,13 +19,10 @@ pub(crate) struct InitCmd {
 
 impl super::Initialize for InitCmd {
     fn init(&self, _: &RootCmd) -> anyhow::Result<Config> {
-        let root_dir: PathBuf;
-        let xdg_data_home: Option<&'static str> = option_env!("XDG_DATA_HOME");
-        if let Some(path) = xdg_data_home {
-            root_dir = Path::new(path).join("nedots");
-        } else {
-            root_dir = Path::new(env!("HOME")).join(".local/share/nedots");
-        }
+        let root_dir = BaseDirs::new()
+            .expect("No BaseDirs")
+            .data_local_dir()
+            .join("nedots");
 
         if !root_dir.exists() {
             log::trace!("Initializing {} @ {}...", &self.remote, &root_dir.display());
@@ -80,13 +78,10 @@ fn migrate_user(from_user: &str, root_dir: &Path) -> anyhow::Result<()> {
 }
 
 fn init_config() -> anyhow::Result<()> {
-    let config_dir: PathBuf;
-    let xdg_config_home: Option<&'static str> = option_env!("XDG_CONFIG_HOME");
-    if let Some(path) = xdg_config_home {
-        config_dir = Path::new(path).join("nedots");
-    } else {
-        config_dir = Path::new(env!("HOME")).join(".config/nedots");
-    }
+    let config_dir = BaseDirs::new()
+        .expect("No BaseDirs")
+        .config_dir()
+        .join("nedots");
 
     let config_file = config_dir.join("nedots.yml");
     if !config_file.exists() {

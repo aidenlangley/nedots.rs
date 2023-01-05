@@ -1,4 +1,5 @@
 use crate::errors::Error;
+use directories::BaseDirs;
 use std::path::{Path, PathBuf};
 
 pub trait ResolvePath {
@@ -56,7 +57,7 @@ impl ResolvePath for PathBuf {
     /// Sometimes we just want to prepend home, which is half of the resolution
     /// process.
     fn prepend_home(&self) -> PathBuf {
-        let path = Path::new(env!("HOME")).join(self);
+        let path = BaseDirs::new().expect("No BaseDirs").home_dir().join(self);
         log::trace!("+$HOME `{}` -> `{}`", self.display(), path.display());
 
         path
@@ -157,8 +158,15 @@ pub fn join_paths(left: &Path, right: &Path) -> PathBuf {
     log::trace!("Joining `{}` -> `{}`", left.display(), right.display());
 
     let path: PathBuf = [
-        left.display().to_string().split('/').collect(),
-        right.display().to_string().split('/').collect::<PathBuf>(),
+        left.display()
+            .to_string()
+            .split(std::path::MAIN_SEPARATOR)
+            .collect(),
+        right
+            .display()
+            .to_string()
+            .split(std::path::MAIN_SEPARATOR)
+            .collect::<PathBuf>(),
     ]
     .into_iter()
     .collect();
