@@ -34,11 +34,10 @@ remote git repository, a list of directories or files, and a list of git submodu
 
 ### GitRepo
 
-| Field  | Type     | Description                                                                                                 |
-| :----- | :------- | :---------------------------------------------------------------------------------------------------------- |
-| id     | `String` | An identifier for this `GitRepo`. `nedots install {id}` may be used to only install this particular source. |
-| remote | `String` | Remote git repository.                                                                                      |
-| path   | `String` | Local path of `GitRepo`, relative to `$HOME`.                                                               |
+| Field  | Type     | Description                                   |
+| :----- | :------- | :-------------------------------------------- |
+| remote | `String` | Remote git repository.                        |
+| path   | `String` | Local path of `GitRepo`, relative to `$HOME`. |
 
 Here is a small example:
 
