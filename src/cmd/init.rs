@@ -58,8 +58,6 @@ impl super::Initialize for InitCmd {
     }
 }
 
-impl super::Run for InitCmd {}
-
 fn migrate_user(from_user: &str, root_dir: &Path) -> anyhow::Result<()> {
     log::trace!("Migrating from `{}`", from_user);
 

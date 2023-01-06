@@ -9,8 +9,34 @@ pub(crate) mod sync;
 use crate::models::config::{self, Config};
 use directories::BaseDirs;
 
-pub trait Initialize<T = Config> {
+pub trait Initialize<T = Config, V = super::RootCmd> {
     fn init(&self, root_args: &super::RootCmd) -> anyhow::Result<T>;
+}
+
+pub trait ValidateConfig {
+    fn validate(&self, mut config: Config) -> anyhow::Result<Config> {
+        config = config.resolve_paths();
+        log::debug!("Resolved {:#?}", config);
+        Ok(config)
+    }
+}
+
+pub trait Run {
+    fn run(&self) -> anyhow::Result<()>;
+}
+
+pub trait RunWith<T = Config> {
+    fn run_with(&self, with: &T) -> anyhow::Result<()>;
+}
+
+pub trait Execute: clap::Args + Run {
+    fn exec(&self) -> anyhow::Result<()> {
+        self.run()
+    }
+}
+
+pub trait ExecuteWith<T = super::RootCmd>: clap::Args + RunWith {
+    fn exec_with(&self, with: &T) -> anyhow::Result<()>;
 }
 
 impl<T: ValidateConfig> Initialize<Config> for T {
@@ -24,28 +50,10 @@ impl<T: ValidateConfig> Initialize<Config> for T {
     }
 }
 
-pub trait ValidateConfig {
-    fn validate(&self, mut config: Config) -> anyhow::Result<Config> {
-        config = config.resolve_paths();
-        log::debug!("Resolved {:#?}", config);
-        Ok(config)
-    }
-}
+impl<T: clap::Args + Run> Execute for T {}
 
-pub trait Run {
-    fn run(&self, _config: &Config) -> anyhow::Result<()> {
-        Ok(())
-    }
-}
-
-pub trait Execute: clap::Args + Run {
-    fn exec(&self, _: &super::RootCmd) -> anyhow::Result<()> {
-        self.run(&Config::default())
-    }
-}
-
-impl<T: clap::Args + Run + Initialize<Config>> Execute for T {
-    fn exec(&self, root_args: &super::RootCmd) -> anyhow::Result<()> {
-        self.run(&self.init(root_args)?)
+impl<T: clap::Args + RunWith + Initialize> ExecuteWith for T {
+    fn exec_with(&self, root_args: &super::RootCmd) -> anyhow::Result<()> {
+        self.run_with(&self.init(root_args)?)
     }
 }

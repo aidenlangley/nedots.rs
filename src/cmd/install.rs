@@ -1,7 +1,7 @@
 use crate::{models::config::Config, utils::paths::ResolvePath};
 
 #[derive(Debug, clap::Args)]
-/// Install filese & directories from {root}/{dots_dir}/{source} to $HOME/{source}.
+/// Install files & directories
 pub(crate) struct InstallCmd {
     /// Only gather this source. Any unique portion of a path in `sources` is
     /// valid. E.g. given a list of [ "/home/user/.bashrc", "/home/user/.zshrc" ],
@@ -21,10 +21,10 @@ impl super::ValidateConfig for InstallCmd {
     }
 }
 
-const SUCCESS_MSG: &str = "👍 Installed";
+impl super::RunWith<Config> for InstallCmd {
+    fn run_with(&self, config: &Config) -> anyhow::Result<()> {
+        const SUCCESS_MSG: &str = "👍 Installed";
 
-impl super::Run for InstallCmd {
-    fn run(&self, config: &Config) -> anyhow::Result<()> {
         if let Some(key) = &self.key {
             if let Some(val) = config.get_sources_as_hashmap().get(key.as_str()) {
                 let dst = &val.prepend_home();

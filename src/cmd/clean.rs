@@ -2,7 +2,7 @@ use crate::{models::config::Config, utils::paths::MakeDirs};
 use std::path::Path;
 
 #[derive(Debug, clap::Args)]
-/// Clean up `dots` & `backups`. Example: `nedots clean -db` to clean both.
+/// Clean up
 pub(crate) struct CleanCmd {
     #[arg(short, long)]
     /// Clean up `dots`.
@@ -20,8 +20,8 @@ pub(crate) struct CleanCmd {
 // Use default `Config` validation.
 impl super::ValidateConfig for CleanCmd {}
 
-impl super::Run for CleanCmd {
-    fn run(&self, config: &Config) -> anyhow::Result<()> {
+impl super::RunWith<Config> for CleanCmd {
+    fn run_with(&self, config: &Config) -> anyhow::Result<()> {
         if self.dots {
             confirm_clean(
                 &format!(

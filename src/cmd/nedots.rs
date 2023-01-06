@@ -1,4 +1,4 @@
-use super::{Execute, Run};
+use super::{Execute, ExecuteWith, Run, RunWith};
 use crate::models::config::Config;
 use clap_verbosity_flag::Verbosity;
 
@@ -28,16 +28,16 @@ pub(crate) enum Command {
     Sync(super::sync::SyncCmd),
 }
 
-impl super::Run for RootCmd {
-    fn run(&self, _: &Config) -> anyhow::Result<()> {
+impl super::RunWith<Config> for RootCmd {
+    fn run_with(&self, _: &Config) -> anyhow::Result<()> {
         if let Some(cmd) = &self.cmd {
             match cmd {
-                Command::Backup(backup_cmd) => backup_cmd.exec(self),
-                Command::Clean(clean_cmd) => clean_cmd.exec(self),
-                Command::Completions(completions_cmd) => completions_cmd.exec(self),
-                Command::Init(init_cmd) => init_cmd.exec(self),
-                Command::Install(install_cmd) => install_cmd.exec(self),
-                Command::Sync(sync_cmd) => sync_cmd.exec(self),
+                Command::Backup(backup_cmd) => backup_cmd.exec_with(self),
+                Command::Clean(clean_cmd) => clean_cmd.exec_with(self),
+                Command::Completions(completions_cmd) => completions_cmd.exec(),
+                Command::Init(init_cmd) => init_cmd.exec_with(self),
+                Command::Install(install_cmd) => install_cmd.exec_with(self),
+                Command::Sync(sync_cmd) => sync_cmd.exec_with(self),
             }
         } else {
             Ok(())
@@ -45,9 +45,9 @@ impl super::Run for RootCmd {
     }
 }
 
-impl super::Execute for RootCmd {
-    fn exec(&self, _: &RootCmd) -> anyhow::Result<()> {
-        self.run(&Config::default())
+impl super::ExecuteWith<RootCmd> for RootCmd {
+    fn exec_with(&self, _: &RootCmd) -> anyhow::Result<()> {
+        self.run_with(&Config::default())
     }
 }
 
