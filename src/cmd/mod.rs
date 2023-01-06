@@ -1,5 +1,6 @@
 pub(crate) mod backup;
 pub(crate) mod clean;
+pub(crate) mod completions;
 pub(crate) mod init;
 pub(crate) mod install;
 pub(crate) mod nedots;

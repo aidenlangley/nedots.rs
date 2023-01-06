@@ -22,6 +22,7 @@ pub struct RootCmd {
 pub(crate) enum Command {
     Backup(super::backup::BackupCmd),
     Clean(super::clean::CleanCmd),
+    Completions(super::completions::CompletionsCmd),
     Init(super::init::InitCmd),
     Install(super::install::InstallCmd),
     Sync(super::sync::SyncCmd),
@@ -33,6 +34,7 @@ impl super::Run for RootCmd {
             match cmd {
                 Command::Backup(backup_cmd) => backup_cmd.exec(self),
                 Command::Clean(clean_cmd) => clean_cmd.exec(self),
+                Command::Completions(completions_cmd) => completions_cmd.exec(self),
                 Command::Init(init_cmd) => init_cmd.exec(self),
                 Command::Install(install_cmd) => install_cmd.exec(self),
                 Command::Sync(sync_cmd) => sync_cmd.exec(self),
