@@ -5,15 +5,15 @@ use std::path::Path;
 /// Clean up
 pub(crate) struct CleanCmd {
     #[arg(short, long)]
-    /// Clean up `dots`.
+    /// Clean up `dots`
     dots: bool,
 
     #[arg(short, long)]
-    /// Clean up `backups`.
+    /// Clean up `backups`
     backups: bool,
 
     #[arg(short = 'y', long)]
-    /// Won't prompt you to confirm the operation when cleaning.
+    /// Won't prompt you to confirm the operation when cleaning
     assumeyes: bool,
 }
 

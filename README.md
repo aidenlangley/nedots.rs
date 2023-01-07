@@ -2,6 +2,8 @@
 
 [![builds.sr.ht status](https://builds.sr.ht/~nedia.svg)](https://builds.sr.ht/~nedia?)
 
+<!-- [![#lines](https://img.shields.io/tokei/lines/sr.ht/~nedia/nedots.rs?label=%23lines)](https://img.shields.io/tokei/lines/sr.ht/~nedia/nedots.rs?label=%23lines) -->
+
 [sourcehut](https://git.sr.ht/~nedia/nedots.rs) | [github](https://github.com/aidenlangley/nedots.rs) | [crates.io](https://crates.io/crates/nedots)
 
 A smart, safe and intuitive dotfiles management tool.
@@ -112,7 +114,6 @@ tree .local/share/nedots/dots -a
             └── wallhaven-zm9kpy.jpg
 
 7 directories, 14 files
-
 ```
 
 That's it! Now anytime you make changes to the files or folders defined in
@@ -125,8 +126,7 @@ them to remote.
 | :-------------- | :------------------------------------------------------------------------- |
 | Cargo           | `cargo install nedots`                                                     |
 | GitHub/Releases | Download binary [here](https://github.com/aidenlangley/nedots.rs/releases) |
-
-<!-- | Arch      | `yay -S nedots`        | -->
+| Arch (AUR)      | `yay -S nedots`                                                            |
 
 ## Build from Source
 

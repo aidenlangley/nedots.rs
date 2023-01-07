@@ -45,7 +45,7 @@ impl<T: ValidateConfig> Initialize<Config> for T {
         let mut config = config::read(&base_dirs.config_dir().join(&root_args.config))?;
         config.root = base_dirs.data_local_dir().join("nedots");
 
-        log::debug!("Raw config `{:#?}`", config);
+        log::debug!("Raw {:#?}", config);
         self.validate(config)
     }
 }

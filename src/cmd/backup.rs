@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 /// Backup local configuration files/(ne)dots
 pub(crate) struct BackupCmd;
 
-// Use default `Config` validation.
+// Use default `Config` validation
 impl super::ValidateConfig for BackupCmd {}
 
 impl super::RunWith<Config> for BackupCmd {
