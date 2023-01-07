@@ -126,8 +126,7 @@ them to remote.
 | :-------------- | :------------------------------------------------------------------------- |
 | Cargo           | `cargo install nedots`                                                     |
 | GitHub/Releases | Download binary [here](https://github.com/aidenlangley/nedots.rs/releases) |
-
-<!-- | Arch      | `yay -S nedots`        | -->
+| Arch (AUR)      | `yay -S nedots`                                                            |
 
 ## Build from Source
 
