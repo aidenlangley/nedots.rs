@@ -2,6 +2,8 @@
 
 [![builds.sr.ht status](https://builds.sr.ht/~nedia.svg)](https://builds.sr.ht/~nedia?)
 
+<!-- [![#lines](https://img.shields.io/tokei/lines/sr.ht/~nedia/nedots.rs?label=%23lines)](https://img.shields.io/tokei/lines/sr.ht/~nedia/nedots.rs?label=%23lines) -->
+
 [sourcehut](https://git.sr.ht/~nedia/nedots.rs) | [github](https://github.com/aidenlangley/nedots.rs) | [crates.io](https://crates.io/crates/nedots)
 
 A smart, safe and intuitive dotfiles management tool.
@@ -34,11 +36,10 @@ remote git repository, a list of directories or files, and a list of git submodu
 
 ### GitRepo
 
-| Field  | Type     | Description                                                                                                 |
-| :----- | :------- | :---------------------------------------------------------------------------------------------------------- |
-| id     | `String` | An identifier for this `GitRepo`. `nedots install {id}` may be used to only install this particular source. |
-| remote | `String` | Remote git repository.                                                                                      |
-| path   | `String` | Local path of `GitRepo`, relative to `$HOME`.                                                               |
+| Field  | Type     | Description                                   |
+| :----- | :------- | :-------------------------------------------- |
+| remote | `String` | Remote git repository.                        |
+| path   | `String` | Local path of `GitRepo`, relative to `$HOME`. |
 
 Here is a small example:
 

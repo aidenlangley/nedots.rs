@@ -1,12 +1,13 @@
 pub(crate) mod backup;
 pub(crate) mod clean;
+pub(crate) mod completions;
 pub(crate) mod init;
 pub(crate) mod install;
 pub(crate) mod nedots;
 pub(crate) mod sync;
 
 use crate::models::config::{self, Config};
-use std::path::Path;
+use directories::BaseDirs;
 
 pub trait Initialize<T = Config> {
     fn init(&self, root_args: &super::RootCmd) -> anyhow::Result<T>;
@@ -14,22 +15,9 @@ pub trait Initialize<T = Config> {
 
 impl<T: ValidateConfig> Initialize<Config> for T {
     fn init(&self, root_args: &super::RootCmd) -> anyhow::Result<Config> {
-        let mut config: Config;
-
-        let xdg_config_home: Option<&'static str> = option_env!("XDG_CONFIG_HOME");
-        if let Some(path) = xdg_config_home {
-            config = config::read(&Path::new(path).join(&root_args.config))?;
-        } else {
-            let path = Path::new(env!("HOME")).join(".config");
-            config = config::read(&path.join(&root_args.config))?;
-        }
-
-        let xdg_data_home: Option<&'static str> = option_env!("XDG_DATA_HOME");
-        if let Some(path) = xdg_data_home {
-            config.root = Path::new(path).join("nedots");
-        } else {
-            config.root = Path::new(env!("HOME")).join(".local/share/nedots");
-        }
+        let base_dirs = BaseDirs::new().expect("No BaseDirs");
+        let mut config = config::read(&base_dirs.config_dir().join(&root_args.config))?;
+        config.root = base_dirs.data_local_dir().join("nedots");
 
         log::debug!("Raw {:#?}", config);
         self.validate(config)
