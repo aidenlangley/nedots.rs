@@ -1,7 +1,6 @@
 use crate::{
-    models::{config::Config, git_repo::GitRepo},
+    models::git_repo::GitRepo,
     utils::{paths::MakeDirs, spinner::Spinner},
-    RootCmd,
 };
 use directories::BaseDirs;
 use std::path::Path;
@@ -17,8 +16,8 @@ pub(crate) struct InitCmd {
     remote: String,
 }
 
-impl super::Initialize for InitCmd {
-    fn init(&self, _: &RootCmd) -> anyhow::Result<Config> {
+impl super::Run for InitCmd {
+    fn run(&self) -> anyhow::Result<()> {
         let root_dir = BaseDirs::new()
             .expect("No BaseDirs")
             .data_local_dir()
@@ -54,7 +53,7 @@ impl super::Initialize for InitCmd {
         init_config()?;
 
         log::info!("✅ {}", console::style("Initialized!").bold());
-        Ok(Config::default())
+        Ok(())
     }
 }
 

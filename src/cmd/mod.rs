@@ -10,7 +10,7 @@ use crate::models::config::{self, Config};
 use directories::BaseDirs;
 
 pub trait Initialize<T = Config, V = super::RootCmd> {
-    fn init(&self, root_args: &super::RootCmd) -> anyhow::Result<T>;
+    fn init(&self, args: &V) -> anyhow::Result<T>;
 }
 
 pub trait ValidateConfig {
@@ -50,7 +50,11 @@ impl<T: ValidateConfig> Initialize<Config> for T {
     }
 }
 
-impl<T: clap::Args + Run> Execute for T {}
+impl<T: clap::Args + Run> Execute for T {
+    fn exec(&self) -> anyhow::Result<()> {
+        self.run()
+    }
+}
 
 impl<T: clap::Args + RunWith + Initialize> ExecuteWith for T {
     fn exec_with(&self, root_args: &super::RootCmd) -> anyhow::Result<()> {

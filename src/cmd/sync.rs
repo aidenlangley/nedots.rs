@@ -17,8 +17,8 @@ pub(crate) struct SyncCmd {
 
 impl super::ValidateConfig for SyncCmd {}
 
-impl super::Run for SyncCmd {
-    fn run(&self, config: &Config) -> anyhow::Result<()> {
+impl super::RunWith for SyncCmd {
+    fn run_with(&self, config: &Config) -> anyhow::Result<()> {
         fn git_add_commit_push(repo: &GitRepo, push: bool) -> anyhow::Result<()> {
             let spinner = Spinner::start();
 

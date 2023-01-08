@@ -1,5 +1,3 @@
-use super::Run;
-use crate::{models::config::Config, RootCmd};
 use clap_complete::{generate, shells};
 
 #[derive(Debug, clap::Args)]

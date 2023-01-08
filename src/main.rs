@@ -1,5 +1,5 @@
 use clap::Parser;
-use nedots::{Execute, RootCmd};
+use nedots::{ExecuteWith, RootCmd};
 use std::process::ExitCode;
 
 fn init() -> RootCmd {
@@ -36,7 +36,7 @@ fn init() -> RootCmd {
 }
 
 fn run(root_cmd: RootCmd) -> ExitCode {
-    match root_cmd.exec(&root_cmd) {
+    match root_cmd.exec_with(&root_cmd) {
         Ok(_) => ExitCode::SUCCESS,
         Err(err) => {
             log::error!("❌ {}", err);
