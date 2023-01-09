@@ -1,18 +1,17 @@
 use crate::{
-    models::git_repo::GitRepo,
+    models::{config, git_repo::GitRepo},
     utils::{paths::MakeDirs, spinner::Spinner},
 };
 use directories::BaseDirs;
 use std::path::Path;
 
 #[derive(Debug, clap::Args)]
-/// Initialize `nedots`
-pub(crate) struct InitCmd {
-    /// Migrating files from this user.
+pub struct InitCmd {
+    /// Migrating files from this user
     #[arg(short, long)]
     from_user: Option<String>,
 
-    /// Remote git repository to clone, `root` arg determines the destination.
+    /// Remote git repository to clone, `root` arg determines the destination
     remote: String,
 }
 
@@ -46,7 +45,7 @@ impl super::Run for InitCmd {
         }
 
         // Make backup directory
-        let path = Path::new(&root_dir).join(crate::models::config::DEFAULT_BACKUP_DIR);
+        let path = Path::new(&root_dir).join(config::DEFAULT_BACKUP_DIR);
         path.make_all_dirs()?;
 
         // Create `$XDG_CONFIG_HOME/nedots` & create a sample config file..
@@ -60,7 +59,7 @@ impl super::Run for InitCmd {
 fn migrate_user(from_user: &str, root_dir: &Path) -> anyhow::Result<()> {
     log::trace!("Migrating from `{}`", from_user);
 
-    let path = root_dir.join(crate::models::config::DEFAULT_DOTS_DIR);
+    let path = root_dir.join(config::DEFAULT_DOTS_DIR);
     let from_path = path.join(format!("home/{}", from_user));
     let to_path = crate::utils::join_paths(&path, Path::new(env!("HOME")));
 
@@ -82,10 +81,10 @@ fn init_config() -> anyhow::Result<()> {
 
     let config_file = config_dir.join("nedots.yml");
     if !config_file.exists() {
-        // If .nedots.yml isn't yet present, we'll create an example file.
+        // If nedots.yml isn't yet present, we'll create an example file.
         log::trace!("Creating sample `{}`...", config_file.display());
 
-        let yaml = serde_yaml::to_string(&crate::models::config::get_sample())?;
+        let yaml = serde_yaml::to_string(&config::get_sample())?;
         config_dir.make_all_dirs()?;
         std::fs::write(&config_file, yaml)?;
 

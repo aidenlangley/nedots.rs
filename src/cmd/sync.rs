@@ -4,20 +4,17 @@ use crate::{
 };
 
 #[derive(Debug, clap::Parser)]
-/// Collect files & directories & sync with remote.
 pub(crate) struct SyncCmd {
+    /// Gather dots before syncing
     #[arg(short, long)]
-    /// Gather dots before syncing.
     gather: bool,
 
+    /// Don't push to remote, useful for testing
     #[arg(short, long)]
-    /// Don't push to remote, useful for testing.
     nopush: bool,
 }
 
-impl super::ValidateConfig for SyncCmd {}
-
-impl super::RunWith for SyncCmd {
+impl super::RunWith<Config> for SyncCmd {
     fn run_with(&self, config: &Config) -> anyhow::Result<()> {
         fn git_add_commit_push(repo: &GitRepo, push: bool) -> anyhow::Result<()> {
             let spinner = Spinner::start();

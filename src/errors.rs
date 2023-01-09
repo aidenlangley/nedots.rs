@@ -1,5 +1,5 @@
 #[derive(Debug, thiserror::Error)]
-pub(crate) enum Error {
+pub enum Error {
     #[error("`{0}` failed! Review the output & try again")]
     Command(String),
 

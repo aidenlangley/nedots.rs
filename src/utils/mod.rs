@@ -1,12 +1,11 @@
 pub mod paths;
 pub use paths::join_paths;
-
-pub(crate) mod spinner;
+pub mod spinner;
 
 use crate::errors::Error;
 use std::process::Command;
 
-pub(crate) fn run_cmd(prog: &str, args: &[&str]) -> anyhow::Result<()> {
+pub fn run_cmd(prog: &str, args: &[&str]) -> anyhow::Result<()> {
     log::trace!("`{} {}`...", prog, args.join(" "));
 
     let output = Command::new(prog).args(args).output()?;
@@ -25,6 +24,6 @@ pub(crate) fn run_cmd(prog: &str, args: &[&str]) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub(crate) fn get_timestamp() -> String {
+pub fn get_timestamp() -> String {
     format!("{}", chrono::offset::Local::now().timestamp())
 }

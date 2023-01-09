@@ -1,2 +1,2 @@
-mod copy;
+pub mod copy;
 pub use copy::copy;

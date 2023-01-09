@@ -22,10 +22,10 @@ pub struct Config {
     pub git_repos: Vec<GitRepo>,
 }
 
-pub(crate) const DEFAULT_DOTS_DIR: &str = "dots";
-pub(crate) const DEFAULT_BACKUP_DIR: &str = "backups";
+pub const DEFAULT_DOTS_DIR: &str = "dots";
+pub const DEFAULT_BACKUP_DIR: &str = "backups";
 
-pub(crate) fn read(path: &Path) -> anyhow::Result<Config> {
+pub fn read(path: &Path) -> anyhow::Result<Config> {
     let path = path.resolve_path()?;
 
     log::trace!("Reading `{}`...", path.display());
@@ -39,7 +39,7 @@ pub(crate) fn read(path: &Path) -> anyhow::Result<Config> {
     Ok(config)
 }
 
-pub(crate) fn get_sample() -> Config {
+pub fn get_sample() -> Config {
     Config {
         root: PathBuf::default(),
         dots_dir: PathBuf::default(),
@@ -54,13 +54,13 @@ pub(crate) fn get_sample() -> Config {
 }
 
 impl Config {
-    pub(crate) fn resolve_paths(mut self) -> Config {
+    pub fn resolve_paths(mut self) -> Config {
         self = self.resolve_dirs();
         self = self.resolve_sources();
         self
     }
 
-    pub(crate) fn resolve_dirs(mut self) -> Config {
+    pub fn resolve_dirs(mut self) -> Config {
         fn log_error(err: Error) {
             log::error!("❌ {}", err);
         }
@@ -85,7 +85,7 @@ impl Config {
         self
     }
 
-    pub(crate) fn resolve_sources(mut self) -> Config {
+    pub fn resolve_sources(mut self) -> Config {
         self.sources = self
             .sources
             .into_iter()
@@ -119,7 +119,7 @@ impl Config {
         self
     }
 
-    pub(crate) fn get_sources_as_hashmap(&self) -> HashMap<&str, PathBuf> {
+    pub fn get_sources_as_hashmap(&self) -> HashMap<&str, PathBuf> {
         let mut all_parts: Vec<&str> = Vec::new();
         for pb in &self.sources {
             let _: Vec<&str> = pb

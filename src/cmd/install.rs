@@ -1,8 +1,7 @@
 use crate::{models::config::Config, utils::paths::ResolvePath};
 
 #[derive(Debug, clap::Args)]
-/// Install files & directories
-pub(crate) struct InstallCmd {
+pub struct InstallCmd {
     /// Only gather this source. Any unique portion of a path in `sources` is
     /// valid. E.g. given a list of [ "/home/user/.bashrc", "/home/user/.zshrc" ],
     /// ".bashrc" or ".zshrc" may be used as a key.

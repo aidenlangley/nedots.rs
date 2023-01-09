@@ -1,2 +1,2 @@
-pub(crate) mod config;
-pub(crate) mod git_repo;
+pub mod config;
+pub mod git_repo;

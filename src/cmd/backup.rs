@@ -2,11 +2,7 @@ use crate::{models::config::Config, utils::paths::MakeDirs};
 use std::path::{Path, PathBuf};
 
 #[derive(Debug, clap::Args)]
-/// Backup local configuration files/(ne)dots
-pub(crate) struct BackupCmd;
-
-// Use default `Config` validation
-impl super::ValidateConfig for BackupCmd {}
+pub struct BackupCmd;
 
 impl super::RunWith<Config> for BackupCmd {
     /// Backup `sources` to `backup_dir/{timestamp}`.
@@ -29,13 +25,13 @@ impl super::RunWith<Config> for BackupCmd {
 /// each to `dst`.
 ///
 /// * `sources`: &[PathBuf]
-/// * `dst`: &Path
-pub(crate) fn backup(sources: &[PathBuf], dst: &Path) -> anyhow::Result<()> {
-    log::trace!("Backing up to `{}`", dst.display().to_string());
-    dst.make_all_dirs()?;
+/// * `to`: &Path
+pub fn backup(sources: &[PathBuf], to: &Path) -> anyhow::Result<()> {
+    log::trace!("Backing up to `{}`", to.display().to_string());
 
+    to.make_all_dirs()?;
     for source in sources {
-        let dst = crate::utils::join_paths(dst, source);
+        let dst = crate::utils::join_paths(to, source);
         crate::ops::copy(source, &dst)?;
     }
 
