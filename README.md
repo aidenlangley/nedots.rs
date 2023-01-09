@@ -78,7 +78,7 @@ got a git repository for storing your dotfiles. That's some of the work done alr
 nedots init <remote>
 ```
 
-Next, you'll need to edit `.nedots.yml` - `sources` specifically, so that `nedots sync`
+Next, you'll need to edit `nedots.yml` - `sources` specifically, so that `nedots sync`
 can collect your files. It'll then copy them to `$XDG_DATA_HOME/nedots/dots`.
 
 ```sh
