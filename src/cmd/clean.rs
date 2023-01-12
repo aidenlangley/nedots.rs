@@ -26,7 +26,7 @@ impl super::RunWith<Config> for CleanCmd {
     ///
     /// * `config`: &Config
     fn run_with(&self, config: &Config) -> anyhow::Result<()> {
-        if self.dots {
+        if !self.dots && !self.backups {
             confirm_clean(
                 &format!(
                     " ~ {}. Continue?",
@@ -34,10 +34,7 @@ impl super::RunWith<Config> for CleanCmd {
                 ),
                 &config.dots_dir,
                 self.assumeyes,
-            )?
-        }
-
-        if self.backups {
+            )?;
             confirm_clean(
                 &format!(
                     " ~ {}. Continue?",
@@ -45,7 +42,29 @@ impl super::RunWith<Config> for CleanCmd {
                 ),
                 &config.backup_dir,
                 self.assumeyes,
-            )?
+            )?;
+        } else {
+            if self.dots {
+                confirm_clean(
+                    &format!(
+                        " ~ {}. Continue?",
+                        console::style("Cleaning dots").yellow().bold()
+                    ),
+                    &config.dots_dir,
+                    self.assumeyes,
+                )?
+            }
+
+            if self.backups {
+                confirm_clean(
+                    &format!(
+                        " ~ {}. Continue?",
+                        console::style("Cleaning backups").yellow().bold()
+                    ),
+                    &config.backup_dir,
+                    self.assumeyes,
+                )?
+            }
         }
 
         Ok(())
@@ -53,10 +72,6 @@ impl super::RunWith<Config> for CleanCmd {
 }
 
 /// Helper `fn` that sits inbetween `clean` and `confirm`.
-///
-/// * `prompt`: &str, msg to display to the user.
-/// * `path`: &Path, path of directory to remove.
-/// * `assumeyes`: bool, if given as true, we assume user will say yes to prompt.
 fn confirm_clean<T>(prompt: &str, path: &T, assumeyes: bool) -> anyhow::Result<()>
 where
     T: AsRef<Path>,
@@ -68,10 +83,6 @@ where
 }
 
 /// Let the user confirm their choice by presenting a `dialoger::Confirm`.
-///
-/// * `prompt`: `&str`, msg to display to the user.
-/// * `func`: `fn`, function to run if user gives an affirmative response.
-/// * `path`: `&Path`, path to run function on.
 fn confirm<T>(prompt: &str, func: impl Fn(T) -> anyhow::Result<()>, path: T) -> anyhow::Result<()>
 where
     T: AsRef<Path>,
@@ -88,8 +99,6 @@ where
 }
 
 /// Remove this directory.
-///
-/// * `dir`: `&Path` path to remove.
 fn clean<T>(dir: &T) -> anyhow::Result<()>
 where
     T: AsRef<Path>,

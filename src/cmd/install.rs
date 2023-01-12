@@ -25,7 +25,7 @@ impl super::RunWith<Config> for InstallCmd {
 
                 crate::ops::copy(&src, &dst)?;
                 log::info!(
-                    "{} `{}`",
+                    "{} {}",
                     SUCCESS_MSG,
                     console::style(dst.display()).green().bold(),
                 );
@@ -39,7 +39,7 @@ impl super::RunWith<Config> for InstallCmd {
 
                 crate::ops::copy(&src, &dst)?;
                 log::info!(
-                    "{} `{}`",
+                    "{} {}",
                     SUCCESS_MSG,
                     console::style(dst.display()).green().bold(),
                 );
@@ -48,7 +48,7 @@ impl super::RunWith<Config> for InstallCmd {
             for repo in &config.git_repos {
                 repo.clone()?;
                 log::info!(
-                    "{} `{}`",
+                    "{} {}",
                     SUCCESS_MSG,
                     console::style(repo.path.display()).green().bold(),
                 );
