@@ -9,12 +9,7 @@ pub struct InstallCmd {
 }
 
 impl super::ValidateConfig for InstallCmd {
-    /// `InstallCmd` only validates core directories defined in `Config` - no
-    /// need to validate `sources`, etc.
-    ///
-    /// * `config`: mut Config
     fn validate(&self, config: Config) -> anyhow::Result<Config> {
-        log::debug!("Resolved {:#?}", config);
         Ok(config)
     }
 }

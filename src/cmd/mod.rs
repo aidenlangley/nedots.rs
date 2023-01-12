@@ -31,6 +31,8 @@ impl<T: ValidateConfig> Initialize<Config, RootCmd> for T {
 
         let mut config = config::read(config_path)?;
         config.root = base_dirs.data_local_dir().join("nedots");
+        config.dots_dir = config.root.join(config::DEFAULT_DOTS_DIR);
+        config.backup_dir = config.root.join(config::DEFAULT_BACKUP_DIR);
 
         log::debug!("Raw {:#?}", config);
         self.validate(config)
