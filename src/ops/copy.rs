@@ -1,7 +1,11 @@
 use crate::utils::paths::{get_metadata, make_all_dirs};
 use std::path::Path;
 
-pub fn copy(from: &Path, to: &Path) -> anyhow::Result<()> {
+pub fn copy<T>(from: &T, to: &T) -> anyhow::Result<()>
+where
+    T: AsRef<Path> + ?Sized,
+{
+    let (from, to) = (from.as_ref(), to.as_ref());
     log::trace!("Copying `{}` -> `{}`", from.display(), to.display());
 
     // There are a couple of ways to check if a given path can be considered a
@@ -37,5 +41,6 @@ pub fn copy(from: &Path, to: &Path) -> anyhow::Result<()> {
         }
     }
 
+    log::trace!("--");
     Ok(())
 }

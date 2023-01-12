@@ -55,7 +55,7 @@ impl super::RunWith<Config> for SyncCmd {
 
             for source in &config.sources {
                 let dst = crate::utils::join_paths(&config.dots_dir, source);
-                crate::ops::copy(source, &dst)?;
+                crate::ops::copy(source, &dst.into())?;
             }
             spinner.finish();
 
