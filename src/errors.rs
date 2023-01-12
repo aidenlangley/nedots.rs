@@ -12,12 +12,12 @@ pub enum Error {
     #[error("No metadata ({0})")]
     Metadata(String),
 
+    #[error("Failed to resolve `{path}` ({err})")]
+    ResolvePath { path: String, err: std::io::Error },
+
     #[error("No modified time ({0})")]
     _ModifiedTime(String),
 
     #[error("Failed to remove dir @ `{path}` ({err})")]
     _RemoveDir { path: String, err: std::io::Error },
-
-    #[error("Failed to resolve `{path}` ({err})")]
-    ResolvePath { path: String, err: std::io::Error },
 }

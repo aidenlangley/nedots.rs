@@ -1,6 +1,11 @@
 use indicatif::ProgressBar;
 use std::time::Duration;
 
+/// Simple `Spinner` struct, provides `start` that starts a
+/// [`indicatif::ProgressBar`][indicatif-progress-bar-url] spinner with a
+/// steady tick, as well as `set_msg` & `finish` helper functions.
+///
+/// [indicatif-progress-bar-url]: https://docs.rs/indicatif/latest/indicatif/struct.ProgressBar.html
 pub struct Spinner(ProgressBar);
 
 impl Spinner {

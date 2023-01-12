@@ -1,5 +1,8 @@
 use crate::{
-    models::{config, git_repo::GitRepo},
+    models::{
+        config::{self, Config},
+        git_repo::GitRepo,
+    },
     utils::spinner::Spinner,
 };
 use directories::BaseDirs;
@@ -87,7 +90,7 @@ fn init_config() -> anyhow::Result<()> {
         // If nedots.yml isn't yet present, we'll create an example file.
         log::trace!("Creating sample `{}`...", config_file.display());
 
-        let yaml = serde_yaml::to_string(&config::get_sample())?;
+        let yaml = serde_yaml::to_string(&Config::default())?;
         crate::utils::make_all_dirs(&config_dir)?;
         std::fs::write(&config_file, yaml)?;
 

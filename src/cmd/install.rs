@@ -23,7 +23,7 @@ impl super::RunWith<Config> for InstallCmd {
                 let dst = crate::utils::prepend_home(val);
                 let src = crate::utils::join_paths(&config.dots_dir, &dst.to_path_buf());
 
-                crate::ops::copy(&src, &dst)?;
+                crate::copy(&src, &dst)?;
                 log::info!(
                     "{} {}",
                     SUCCESS_MSG,
@@ -37,7 +37,7 @@ impl super::RunWith<Config> for InstallCmd {
                 let dst = crate::utils::prepend_home(source);
                 let src = crate::utils::join_paths(&config.dots_dir, &dst.to_path_buf());
 
-                crate::ops::copy(&src, &dst)?;
+                crate::copy(&src, &dst)?;
                 log::info!(
                     "{} {}",
                     SUCCESS_MSG,

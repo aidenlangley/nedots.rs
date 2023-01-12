@@ -7,6 +7,7 @@ use std::{
     time::SystemTime,
 };
 
+/// Check if a path exists - if it doesn't, prepend `$HOME` and canonicalize it.
 pub fn resolve_path<T>(path: &T) -> anyhow::Result<Cow<'static, Path>>
 where
     T: AsRef<Path> + ?Sized,
@@ -35,6 +36,7 @@ where
     }
 }
 
+/// Prepend `$HOME` to given path.
 pub fn prepend_home<T>(path: &T) -> Cow<'static, Path>
 where
     T: AsRef<Path> + ?Sized,
@@ -45,6 +47,7 @@ where
     pp.into()
 }
 
+/// Wrapper around `std::fs::create_dir_all`, handles errors.
 pub fn make_all_dirs<T>(path: &T) -> anyhow::Result<()>
 where
     T: AsRef<Path> + ?Sized,
@@ -62,23 +65,6 @@ where
     }
 }
 
-pub fn _remove_all_dirs<T>(path: &T) -> anyhow::Result<()>
-where
-    T: AsRef<Path> + ?Sized,
-{
-    let path = path.as_ref();
-    if let Err(err) = std::fs::remove_dir_all(path) {
-        let err = Error::_RemoveDir {
-            path: path.display().to_string(),
-            err,
-        };
-        Err(err.into())
-    } else {
-        log::debug!("{}{}", console::style("--").red(), path.display());
-        Ok(())
-    }
-}
-
 pub fn get_metadata<T>(path: &T) -> anyhow::Result<Metadata>
 where
     T: AsRef<Path> + ?Sized,
@@ -88,19 +74,6 @@ where
         Ok(metadata)
     } else {
         let err = Error::Metadata(path.display().to_string());
-        Err(err.into())
-    }
-}
-
-pub fn _get_modified<T>(path: &T) -> anyhow::Result<SystemTime>
-where
-    T: AsRef<Path> + ?Sized,
-{
-    let path = path.as_ref();
-    if let Ok(modified) = get_metadata(path)?.modified() {
-        Ok(modified)
-    } else {
-        let err = Error::_ModifiedTime(path.display().to_string());
         Err(err.into())
     }
 }
@@ -132,6 +105,36 @@ where
     .collect();
 
     Path::new("/").join(path).into()
+}
+
+fn _get_modified<T>(path: &T) -> anyhow::Result<SystemTime>
+where
+    T: AsRef<Path> + ?Sized,
+{
+    let path = path.as_ref();
+    if let Ok(modified) = get_metadata(path)?.modified() {
+        Ok(modified)
+    } else {
+        let err = Error::_ModifiedTime(path.display().to_string());
+        Err(err.into())
+    }
+}
+
+fn _remove_all_dirs<T>(path: &T) -> anyhow::Result<()>
+where
+    T: AsRef<Path> + ?Sized,
+{
+    let path = path.as_ref();
+    if let Err(err) = std::fs::remove_dir_all(path) {
+        let err = Error::_RemoveDir {
+            path: path.display().to_string(),
+            err,
+        };
+        Err(err.into())
+    } else {
+        log::debug!("{}{}", console::style("--").red(), path.display());
+        Ok(())
+    }
 }
 
 #[cfg(test)]

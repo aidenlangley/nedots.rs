@@ -2,6 +2,20 @@ use clap::Parser;
 use nedots::{ExecuteWith, RootCmd};
 use std::process::ExitCode;
 
+fn main() -> ExitCode {
+    run(init())
+}
+
+fn run(root_cmd: RootCmd) -> ExitCode {
+    match root_cmd.exec_with(&root_cmd) {
+        Ok(_) => ExitCode::SUCCESS,
+        Err(err) => {
+            log::error!("❌ {}", err);
+            ExitCode::FAILURE
+        }
+    }
+}
+
 fn init() -> RootCmd {
     let root_cmd = RootCmd::parse();
 
@@ -33,18 +47,4 @@ fn init() -> RootCmd {
 
     log::debug!("{:#?}", root_cmd);
     root_cmd
-}
-
-fn run(root_cmd: RootCmd) -> ExitCode {
-    match root_cmd.exec_with(&root_cmd) {
-        Ok(_) => ExitCode::SUCCESS,
-        Err(err) => {
-            log::error!("❌ {}", err);
-            ExitCode::FAILURE
-        }
-    }
-}
-
-fn main() -> ExitCode {
-    run(init())
 }

@@ -34,7 +34,7 @@ where
     for source in sources {
         let source = source.as_ref();
         let dst = crate::utils::join_paths(to, source);
-        crate::ops::copy(source, &dst)?;
+        crate::copy(source, &dst)?;
     }
 
     Ok(())

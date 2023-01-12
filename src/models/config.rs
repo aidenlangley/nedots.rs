@@ -9,7 +9,7 @@ use std::{
 pub const DEFAULT_DOTS_DIR: &str = "dots";
 pub const DEFAULT_BACKUP_DIR: &str = "backups";
 
-#[derive(Debug, Default, Clone, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Config {
     #[serde(skip, default)]
     pub root: PathBuf,
@@ -101,6 +101,22 @@ impl Config {
     }
 }
 
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            root: PathBuf::default(),
+            dots_dir: PathBuf::default(),
+            backup_dir: PathBuf::default(),
+            remote: "git@git.sr.ht:~nedia/nedots".into(),
+            sources: vec![".config/nedots".into()],
+            git_repos: vec![GitRepo::new(
+                "git@git.sr.ht:~nedia/config.nvim",
+                ".config/nvim",
+            )],
+        }
+    }
+}
+
 pub fn read<T>(path: T) -> anyhow::Result<Config>
 where
     T: AsRef<Path>,
@@ -116,18 +132,4 @@ where
         .with_context(|| format!("Failed to deserialize `{:#?}`", &raw))?;
 
     Ok(config)
-}
-
-pub fn get_sample() -> Config {
-    Config {
-        root: PathBuf::default(),
-        dots_dir: PathBuf::default(),
-        backup_dir: PathBuf::default(),
-        remote: "git@git.sr.ht:~nedia/nedots".to_string(),
-        sources: vec![".config/nedots".into()],
-        git_repos: vec![GitRepo::new(
-            "git@git.sr.ht:~nedia/config.nvim",
-            ".config/nvim",
-        )],
-    }
 }
