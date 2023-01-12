@@ -10,20 +10,13 @@ tasks:
       rustup-init -y
       echo "source $HOME/.cargo/env" >> .buildenv
   - setup: |
-      rustup toolchain install nightly stable
+      rustup toolchain install stable
       cd nedots.rs
       rustup run stable cargo fetch
-  - stable: |
+  - test: |
       rustup default stable
       cd nedots.rs
-      cargo build --verbose
       cargo test --lib --verbose
-  - nightly: |
-      rustup default nightly
-      cd nedots.rs
-      cargo build --verbose ||:
-      cargo test --lib --verbose ||:
   - docs: |
       cd nedots.rs
       rustup run stable cargo doc --no-deps
-      rustup run nightly cargo doc --no-deps ||:
