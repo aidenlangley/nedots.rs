@@ -1,6 +1,6 @@
 use super::git_repo::GitRepo;
 use crate::utils::paths::ResolvePath;
-use anyhow::{Context, Error};
+use anyhow::Context;
 use std::{
     collections::HashMap,
     path::{Path, PathBuf},
@@ -29,12 +29,12 @@ pub fn read(path: &Path) -> anyhow::Result<Config> {
     let path = path.resolve_path()?;
 
     log::trace!("Reading `{}`...", path.display());
-    let file = std::fs::read_to_string(&path)
+    let raw = std::fs::read_to_string(&path)
         .with_context(|| format!("Failed to read `{}`", path.display()))?;
 
     log::trace!("Deserializing...");
-    let config: Config = serde_yaml::from_str(&file)
-        .with_context(|| format!("Failed to deserialize `{:#?}`", &file))?;
+    let config: Config = serde_yaml::from_str(&raw)
+        .with_context(|| format!("Failed to deserialize `{:#?}`", &raw))?;
 
     Ok(config)
 }
@@ -61,7 +61,7 @@ impl Config {
     }
 
     pub fn resolve_dirs(mut self) -> Config {
-        fn log_error(err: Error) {
+        fn log_error(err: anyhow::Error) {
             log::error!("❌ {}", err);
         }
 

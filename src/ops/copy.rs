@@ -33,7 +33,7 @@ pub fn copy(from: &Path, to: &Path) -> anyhow::Result<()> {
         }
 
         if let Err(err) = std::fs::copy(from, to) {
-            log::warn!("{}", err);
+            log::warn!("Couldn't copy {} ({})", from.display(), err);
         }
     }
 
