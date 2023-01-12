@@ -12,7 +12,7 @@ environment:
     git.sr.ht ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMZvRd4EtM7R+IHVMWmDkVU3VLQTSwQDSAvW0t2Tkj60
     git.sr.ht ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCj6y+cJlqK3BHZRLZuM+KP2zGPrh4H66DacfliU1E2DHAd1GGwF4g1jwu3L8gOZUTIvUptqWTkmglpYhFp4Iy4=
   remote: git@git.sr.ht:~nedia/nedots
-  debug: ./nedots.rs/target/debug/nedots -vvvv
+  release: ./nedots.rs/target/release/nedots
 tasks:
   - rustup: |
       rustup-init -y
@@ -21,18 +21,18 @@ tasks:
       rustup toolchain install stable
       cd nedots.rs
       rustup run stable cargo fetch
-  - build_debug: |
+  - build_release: |
       cd nedots.rs
       rustup default stable
-      cargo build
+      cargo build --release
   - init: |
       echo $known_hosts >> .ssh/known_hosts
-      $debug init --from-user aiden $remote
+      $release init --from-user aiden $remote
   - install: |
-      $debug install nedots
+      $release install nedots
   - backup: |
-      $debug backup
+      $release backup
   - clean: |
-      $debug clean --dots --backups --assumeyes
+      $release clean --dots --backups --assumeyes
   - sync: |
-      $debug sync --gather --nopush
+      $release sync --gather --nopush
