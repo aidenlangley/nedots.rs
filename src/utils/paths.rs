@@ -27,7 +27,7 @@ where
         }
         Err(err) => {
             let err = Error::ResolvePath {
-                path: path.display().to_string(),
+                path: pb.display().to_string(),
                 err,
             };
             Err(err.into())

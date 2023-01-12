@@ -9,7 +9,9 @@ impl super::RunWith<Config> for BackupCmd {
     ///
     /// * `config`: &Config
     fn run_with(&self, config: &Config) -> anyhow::Result<()> {
-        let dst = config.backup_dir.join(crate::utils::get_timestamp());
+        let dst = config
+            .backup_dir
+            .join(crate::utils::get_timestamp().as_ref());
         backup(&config.sources, &dst)?;
 
         log::info!(

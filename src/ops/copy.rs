@@ -6,7 +6,6 @@ where
     T: AsRef<Path> + ?Sized,
 {
     let (from, to) = (from.as_ref(), to.as_ref());
-    log::trace!("Copying `{}` -> `{}`", from.display(), to.display());
 
     // There are a couple of ways to check if a given path can be considered a
     // directory - via `Metadata` is preferred, as it catches errors, but
@@ -28,6 +27,8 @@ where
             copy(&path, &to.join(path.file_name().unwrap()))?;
         }
     } else {
+        log::trace!("Copying `{}` -> `{}`", from.display(), to.display());
+
         // Now that we are positive we're not handling any directories, it's
         // safe to assume any parent of our file is going to be a directory.
         if let Some(parent) = to.parent() {
@@ -39,8 +40,9 @@ where
         if let Err(err) = std::fs::copy(from, to) {
             log::warn!("Couldn't copy {} ({})", from.display(), err);
         }
+
+        log::trace!("--");
     }
 
-    log::trace!("--");
     Ok(())
 }

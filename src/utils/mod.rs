@@ -1,9 +1,10 @@
 pub mod paths;
 pub use paths::{join_paths, make_all_dirs, prepend_home, resolve_path};
+
 pub mod spinner;
 
 use crate::errors::Error;
-use std::process::Command;
+use std::{borrow::Cow, process::Command};
 
 pub fn run_cmd(prog: &str, args: &[&str]) -> anyhow::Result<()> {
     log::trace!("`{} {}`...", prog, args.join(" "));
@@ -24,6 +25,6 @@ pub fn run_cmd(prog: &str, args: &[&str]) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn get_timestamp() -> String {
-    format!("{}", chrono::offset::Local::now().timestamp())
+pub fn get_timestamp() -> Cow<'static, str> {
+    format!("{}", chrono::offset::Local::now().timestamp()).into()
 }
