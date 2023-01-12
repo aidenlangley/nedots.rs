@@ -1,7 +1,7 @@
 use crate::models::config::Config;
 
 #[derive(Debug, clap::Args)]
-pub struct InstallCmd {
+pub(crate) struct InstallCmd {
     /// Only gather this source. Any unique portion of a path in `sources` is
     /// valid. E.g. given a list of [ "/home/user/.bashrc", "/home/user/.zshrc" ],
     /// ".bashrc" or ".zshrc" may be used as a key.

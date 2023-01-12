@@ -10,7 +10,7 @@ A smart, safe and intuitive dotfiles management tool.
 
 Run `nedots help` / `nedots --help` / `nedots` for documentation.
 
-If you'd like to see it in action, you can check out a [build](https://builds.sr.ht/~nedia/job/916855).
+If you'd like to see it in action, you can check out a [build](https://builds.sr.ht/~nedia/nedots.rs/commits/develop/release.yml).
 The builds run with the maximum level of verbosity, so everything it does is
 logged to `stdout`. The builds showcase all of the functionality - it's not the
 most tangible "demo", but it does give you a peek at what it does.

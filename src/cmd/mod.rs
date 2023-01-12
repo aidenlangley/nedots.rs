@@ -13,7 +13,7 @@ use crate::{
     Execute, ExecuteWith, Initialize, RootCmd, Run, RunWith,
 };
 
-pub trait ValidateConfig {
+pub(crate) trait ValidateConfig {
     fn validate(&self, mut config: Config) -> anyhow::Result<Config> {
         config = config.resolve_paths();
         log::debug!("Resolved {:#?}", config);

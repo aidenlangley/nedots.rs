@@ -2,7 +2,7 @@ use crate::models::config::Config;
 use std::path::Path;
 
 #[derive(Debug, clap::Args)]
-pub struct BackupCmd;
+pub(crate) struct BackupCmd;
 
 impl super::RunWith<Config> for BackupCmd {
     /// Backup `sources` to `backup_dir/{timestamp}`.
@@ -23,7 +23,7 @@ impl super::RunWith<Config> for BackupCmd {
 
 /// Make directory, `backup_dir/{timestamp}` and loop through `sources`. Copy
 /// each to `to`.
-pub fn backup<T>(sources: &[T], to: &T) -> anyhow::Result<()>
+pub(crate) fn backup<T>(sources: &[T], to: &T) -> anyhow::Result<()>
 where
     T: AsRef<Path>,
 {

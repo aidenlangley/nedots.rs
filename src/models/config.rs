@@ -6,32 +6,32 @@ use std::{
     path::{Path, PathBuf},
 };
 
-pub const DEFAULT_DOTS_DIR: &str = "dots";
-pub const DEFAULT_BACKUP_DIR: &str = "backups";
+pub(crate) const DEFAULT_DOTS_DIR: &str = "dots";
+pub(crate) const DEFAULT_BACKUP_DIR: &str = "backups";
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Config {
     #[serde(skip, default)]
-    pub root: PathBuf,
+    pub(crate) root: PathBuf,
 
     #[serde(skip, default)]
-    pub dots_dir: PathBuf,
+    pub(crate) dots_dir: PathBuf,
 
     #[serde(skip, default)]
-    pub backup_dir: PathBuf,
+    pub(crate) backup_dir: PathBuf,
 
-    pub remote: String,
-    pub sources: Vec<PathBuf>,
-    pub git_repos: Vec<GitRepo>,
+    pub(crate) remote: String,
+    pub(crate) sources: Vec<PathBuf>,
+    pub(crate) git_repos: Vec<GitRepo>,
 }
 
 impl Config {
-    pub fn resolve_paths(mut self) -> Config {
+    pub(crate) fn resolve_paths(mut self) -> Config {
         self = self.resolve_sources();
         self
     }
 
-    pub fn resolve_sources(mut self) -> Config {
+    pub(crate) fn resolve_sources(mut self) -> Config {
         self.sources = self
             .sources
             .into_iter()
@@ -65,7 +65,7 @@ impl Config {
         self
     }
 
-    pub fn get_sources_as_hashmap(&self) -> HashMap<&str, PathBuf> {
+    pub(crate) fn get_sources_as_hashmap(&self) -> HashMap<&str, PathBuf> {
         let mut all_parts: Vec<&str> = Vec::new();
         for pb in &self.sources {
             let _: Vec<&str> = pb
@@ -117,7 +117,7 @@ impl Default for Config {
     }
 }
 
-pub fn read<T>(path: T) -> anyhow::Result<Config>
+pub(crate) fn read<T>(path: T) -> anyhow::Result<Config>
 where
     T: AsRef<Path>,
 {

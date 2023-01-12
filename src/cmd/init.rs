@@ -9,7 +9,7 @@ use directories::BaseDirs;
 use std::path::Path;
 
 #[derive(Debug, clap::Args)]
-pub struct InitCmd {
+pub(crate) struct InitCmd {
     /// Migrating files from this user
     #[arg(short, long)]
     from_user: Option<String>,

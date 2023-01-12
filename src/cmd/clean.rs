@@ -7,7 +7,7 @@ use crate::models::config::Config;
 use std::path::Path;
 
 #[derive(Debug, clap::Args)]
-pub struct CleanCmd {
+pub(crate) struct CleanCmd {
     /// Clean up `dots`
     #[arg(short, long)]
     dots: bool,

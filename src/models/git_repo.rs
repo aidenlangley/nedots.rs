@@ -2,12 +2,12 @@ use std::path::{Path, PathBuf};
 
 #[derive(Debug, Default, Clone, serde::Serialize, serde::Deserialize)]
 pub struct GitRepo {
-    pub remote: String,
-    pub path: PathBuf,
+    pub(crate) remote: String,
+    pub(crate) path: PathBuf,
 }
 
 impl GitRepo {
-    pub fn new<T>(remote: &str, path: T) -> Self
+    pub(crate) fn new<T>(remote: &str, path: T) -> Self
     where
         T: AsRef<Path>,
     {
@@ -21,15 +21,15 @@ impl GitRepo {
         crate::utils::run_cmd("git", args)
     }
 
-    pub fn clone(&self) -> anyhow::Result<()> {
+    pub(crate) fn clone(&self) -> anyhow::Result<()> {
         self.run_cmd(&["clone", &self.remote, &self.path.display().to_string()])
     }
 
-    pub fn add(&self, pattern: &str) -> anyhow::Result<()> {
+    pub(crate) fn add(&self, pattern: &str) -> anyhow::Result<()> {
         self.run_cmd(&["-C", &self.path.display().to_string(), "add", pattern])
     }
 
-    pub fn commit(&self, msg: &str) -> anyhow::Result<()> {
+    pub(crate) fn commit(&self, msg: &str) -> anyhow::Result<()> {
         let res = self.run_cmd(&["-C", &self.path.display().to_string(), "commit", "-m", msg]);
         if res.is_err() {
             log::trace!("Expected `git commit` to error and it did, moving on...");
@@ -38,11 +38,11 @@ impl GitRepo {
         Ok(())
     }
 
-    pub fn push(&self) -> anyhow::Result<()> {
+    pub(crate) fn push(&self) -> anyhow::Result<()> {
         self.run_cmd(&["-C", &self.path.display().to_string(), "push"])
     }
 
-    pub fn init_submodules(&self) -> anyhow::Result<()> {
+    pub(crate) fn init_submodules(&self) -> anyhow::Result<()> {
         self.run_cmd(&[
             "-C",
             &self.path.display().to_string(),
@@ -53,7 +53,7 @@ impl GitRepo {
         ])
     }
 
-    pub fn pull(&self) -> anyhow::Result<()> {
+    pub(crate) fn pull(&self) -> anyhow::Result<()> {
         self.run_cmd(&["-C", &self.path.display().to_string(), "pull"])
     }
 }

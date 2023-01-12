@@ -4,7 +4,7 @@ use std::{borrow::Cow, process::Command};
 /// Wraps `Command` - when command is successful & `stderr` is not empty,
 /// it'll forward `stderr` to user. When logging verbosity is `Trace`, `stdout`
 /// will also be forwarded to user.
-pub fn run_cmd(prog: &str, args: &[&str]) -> anyhow::Result<()> {
+pub(crate) fn run_cmd(prog: &str, args: &[&str]) -> anyhow::Result<()> {
     log::trace!("`{} {}`...", prog, args.join(" "));
 
     let output = Command::new(prog).args(args).output()?;
@@ -24,6 +24,6 @@ pub fn run_cmd(prog: &str, args: &[&str]) -> anyhow::Result<()> {
 }
 
 /// Returns current timestamp.
-pub fn get_timestamp() -> Cow<'static, str> {
+pub(crate) fn get_timestamp() -> Cow<'static, str> {
     format!("{}", chrono::offset::Local::now().timestamp()).into()
 }

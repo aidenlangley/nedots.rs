@@ -1,7 +1,7 @@
 use clap_complete::{generate, shells};
 
 #[derive(Debug, clap::Args)]
-pub struct CompletionsCmd {
+pub(crate) struct CompletionsCmd {
     /// The shell to generate completions for
     shell: shells::Shell,
 }
