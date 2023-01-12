@@ -12,8 +12,8 @@ environment:
     git.sr.ht ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMZvRd4EtM7R+IHVMWmDkVU3VLQTSwQDSAvW0t2Tkj60
     git.sr.ht ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCj6y+cJlqK3BHZRLZuM+KP2zGPrh4H66DacfliU1E2DHAd1GGwF4g1jwu3L8gOZUTIvUptqWTkmglpYhFp4Iy4=
   remote: git@git.sr.ht:~nedia/nedots
-  nedots: ./nedots.rs/target/debug/nedots
-  verbose: ./nedots.rs/target/debug/nedots -vvvv
+  debug: ./nedots.rs/target/debug/nedots -vvvv
+  release: ./nedots.rs/target/release/nedots
 tasks:
   - rustup: |
       rustup-init -y
@@ -29,15 +29,17 @@ tasks:
       chmod +x target/debug/nedots
   - init: |
       echo $known_hosts >> .ssh/known_hosts
-      $verbose init --from-user aiden $remote
+      $debug init --from-user aiden $remote
   - install: |
-      $verbose install
-      # $verbose install # Intentionally installing twice
-  - backup: $verbose backup
-  - clean: $verbose clean --dots --backups --assumeyes
-  - sync: $verbose sync --gather --nopush
+      $debug install
+      # $debug install # Intentionally installing twice
+  - backup: $debug backup
+  - clean: $debug clean --dots --backups --assumeyes
+  - sync: $debug sync --gather --nopush
   - user_friendly: |
-      $nedots install
-      $nedots backup
-      $nedots clean -dby
-      $nedots sync -gn
+      cd nedots.rs
+      cargo build --release
+      $release install nedots
+      $release backup
+      $release clean -dby
+      $release sync -gn
