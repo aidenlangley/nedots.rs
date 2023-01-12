@@ -13,10 +13,10 @@ pub enum Error {
     Metadata(String),
 
     #[error("No modified time ({0})")]
-    ModifiedTime(String),
+    _ModifiedTime(String),
 
     #[error("Failed to remove dir @ `{path}` ({err})")]
-    RemoveDir { path: String, err: std::io::Error },
+    _RemoveDir { path: String, err: std::io::Error },
 
     #[error("Failed to resolve `{path}` ({err})")]
     ResolvePath { path: String, err: std::io::Error },

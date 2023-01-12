@@ -1,5 +1,5 @@
-use crate::{models::config::Config, utils::paths::MakeDirs};
-use std::path::{Path, PathBuf};
+use crate::models::config::Config;
+use std::path::Path;
 
 #[derive(Debug, clap::Args)]
 pub struct BackupCmd;
@@ -9,8 +9,8 @@ impl super::RunWith<Config> for BackupCmd {
     ///
     /// * `config`: &Config
     fn run_with(&self, config: &Config) -> anyhow::Result<()> {
-        let dst = &config.backup_dir.join(crate::utils::get_timestamp());
-        backup(&config.sources, dst)?;
+        let dst = config.backup_dir.join(crate::utils::get_timestamp());
+        backup(&config.sources, &dst)?;
 
         log::info!(
             "💽 {} {}",
@@ -23,14 +23,16 @@ impl super::RunWith<Config> for BackupCmd {
 
 /// Make directory, `backup_dir/{timestamp}` and loop through `sources`. Copy
 /// each to `dst`.
-///
-/// * `sources`: &[PathBuf]
-/// * `to`: &Path
-pub fn backup(sources: &[PathBuf], to: &Path) -> anyhow::Result<()> {
+pub fn backup<T>(sources: &[T], to: &T) -> anyhow::Result<()>
+where
+    T: AsRef<Path>,
+{
+    let to = to.as_ref();
     log::trace!("Backing up to `{}`", to.display().to_string());
 
-    to.make_all_dirs()?;
+    crate::utils::make_all_dirs(to)?;
     for source in sources {
+        let source = source.as_ref();
         let dst = crate::utils::join_paths(to, source);
         crate::ops::copy(source, &dst)?;
     }

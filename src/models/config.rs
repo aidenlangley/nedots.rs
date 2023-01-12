@@ -1,10 +1,13 @@
 use super::git_repo::GitRepo;
-use crate::utils::paths::ResolvePath;
+use crate::utils::resolve_path;
 use anyhow::Context;
 use std::{
     collections::HashMap,
     path::{Path, PathBuf},
 };
+
+pub const DEFAULT_DOTS_DIR: &str = "dots";
+pub const DEFAULT_BACKUP_DIR: &str = "backups";
 
 #[derive(Debug, Default, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Config {
@@ -22,66 +25,9 @@ pub struct Config {
     pub git_repos: Vec<GitRepo>,
 }
 
-pub const DEFAULT_DOTS_DIR: &str = "dots";
-pub const DEFAULT_BACKUP_DIR: &str = "backups";
-
-pub fn read(path: &Path) -> anyhow::Result<Config> {
-    let path = path.resolve_path()?;
-
-    log::trace!("Reading `{}`...", path.display());
-    let raw = std::fs::read_to_string(&path)
-        .with_context(|| format!("Failed to read `{}`", path.display()))?;
-
-    log::trace!("Deserializing...");
-    let config: Config = serde_yaml::from_str(&raw)
-        .with_context(|| format!("Failed to deserialize `{:#?}`", &raw))?;
-
-    Ok(config)
-}
-
-pub fn get_sample() -> Config {
-    Config {
-        root: PathBuf::default(),
-        dots_dir: PathBuf::default(),
-        backup_dir: PathBuf::default(),
-        remote: "git@git.sr.ht:~nedia/nedots".to_string(),
-        sources: vec![".config/nedots".into()],
-        git_repos: vec![GitRepo {
-            remote: "git@git.sr.ht:~nedia/config.nvim".to_string(),
-            path: ".config/nvim".into(),
-        }],
-    }
-}
-
 impl Config {
     pub fn resolve_paths(mut self) -> Config {
-        self = self.resolve_dirs();
         self = self.resolve_sources();
-        self
-    }
-
-    pub fn resolve_dirs(mut self) -> Config {
-        fn log_error(err: anyhow::Error) {
-            log::error!("❌ {}", err);
-        }
-
-        match self.root.resolve_path() {
-            Ok(path) => self.root = path,
-            Err(err) => log_error(err),
-        }
-
-        self.dots_dir = self.root.join(DEFAULT_DOTS_DIR);
-        match self.dots_dir.resolve_path() {
-            Ok(path) => self.dots_dir = path,
-            Err(err) => log_error(err),
-        }
-
-        self.backup_dir = self.root.join(DEFAULT_BACKUP_DIR);
-        match self.backup_dir.resolve_path() {
-            Ok(path) => self.backup_dir = path,
-            Err(err) => log_error(err),
-        }
-
         self
     }
 
@@ -89,8 +35,8 @@ impl Config {
         self.sources = self
             .sources
             .into_iter()
-            .map(|s| match s.resolve_path() {
-                Ok(path) => path,
+            .map(|s| match resolve_path(&s) {
+                Ok(path) => path.into(),
                 Err(err) => {
                     log::error!("❌ {}", err);
                     Path::new("").to_path_buf()
@@ -102,14 +48,14 @@ impl Config {
         self.git_repos = self
             .git_repos
             .into_iter()
-            .map(|mut gr| match gr.path.resolve_path() {
+            .map(|mut gr| match resolve_path(&gr.path) {
                 Ok(path) => {
-                    gr.path = path;
+                    gr.path = path.into();
                     gr
                 }
                 Err(err) => {
                     log::error!("❌ {}", err);
-                    gr.path = Path::new("").to_path_buf();
+                    gr.path = Path::new("").into();
                     gr
                 }
             })
@@ -152,5 +98,36 @@ impl Config {
 
         log::debug!("Keyed sources `{:#?}`", &hash_map);
         hash_map
+    }
+}
+
+pub fn read<T>(path: T) -> anyhow::Result<Config>
+where
+    T: AsRef<Path>,
+{
+    let path = path.as_ref();
+
+    log::trace!("Reading `{}`...", path.display());
+    let raw = std::fs::read_to_string(path)
+        .with_context(|| format!("Failed to read `{}`", path.display()))?;
+
+    log::trace!("Deserializing...");
+    let config: Config = serde_yaml::from_str(&raw)
+        .with_context(|| format!("Failed to deserialize `{:#?}`", &raw))?;
+
+    Ok(config)
+}
+
+pub fn get_sample() -> Config {
+    Config {
+        root: PathBuf::default(),
+        dots_dir: PathBuf::default(),
+        backup_dir: PathBuf::default(),
+        remote: "git@git.sr.ht:~nedia/nedots".to_string(),
+        sources: vec![".config/nedots".into()],
+        git_repos: vec![GitRepo::new(
+            "git@git.sr.ht:~nedia/config.nvim",
+            ".config/nvim",
+        )],
     }
 }

@@ -1,6 +1,6 @@
 use crate::{
     models::{config, git_repo::GitRepo},
-    utils::{paths::MakeDirs, spinner::Spinner},
+    utils::spinner::Spinner,
 };
 use directories::BaseDirs;
 use std::path::Path;
@@ -46,7 +46,7 @@ impl super::Run for InitCmd {
 
         // Make backup directory
         let path = Path::new(&root_dir).join(config::DEFAULT_BACKUP_DIR);
-        path.make_all_dirs()?;
+        crate::utils::make_all_dirs(&path)?;
 
         // Create `$XDG_CONFIG_HOME/nedots` & create a sample config file..
         init_config()?;
@@ -56,12 +56,15 @@ impl super::Run for InitCmd {
     }
 }
 
-fn migrate_user(from_user: &str, root_dir: &Path) -> anyhow::Result<()> {
+fn migrate_user<T>(from_user: &str, root_dir: &T) -> anyhow::Result<()>
+where
+    T: AsRef<Path>,
+{
     log::trace!("Migrating from `{}`", from_user);
 
-    let path = root_dir.join(config::DEFAULT_DOTS_DIR);
+    let path = root_dir.as_ref().join(config::DEFAULT_DOTS_DIR);
     let from_path = path.join(format!("home/{}", from_user));
-    let to_path = crate::utils::join_paths(&path, Path::new(env!("HOME")));
+    let to_path = crate::utils::join_paths(path, env!("HOME").into());
 
     log::trace!(
         "Renaming `{}` -> `{}`",
@@ -85,7 +88,7 @@ fn init_config() -> anyhow::Result<()> {
         log::trace!("Creating sample `{}`...", config_file.display());
 
         let yaml = serde_yaml::to_string(&config::get_sample())?;
-        config_dir.make_all_dirs()?;
+        crate::utils::make_all_dirs(&config_dir)?;
         std::fs::write(&config_file, yaml)?;
 
         log::info!(

@@ -3,7 +3,7 @@
 //! Useful in the event that we need a clean slate. This command can serve to
 //! perform any messy or complicated clean up operations.
 
-use crate::{models::config::Config, utils::paths::MakeDirs};
+use crate::models::config::Config;
 use std::path::Path;
 
 #[derive(Debug, clap::Args)]
@@ -57,7 +57,10 @@ impl super::RunWith<Config> for CleanCmd {
 /// * `prompt`: &str, msg to display to the user.
 /// * `path`: &Path, path of directory to remove.
 /// * `assumeyes`: bool, if given as true, we assume user will say yes to prompt.
-fn confirm_clean(prompt: &str, path: &Path, assumeyes: bool) -> anyhow::Result<()> {
+fn confirm_clean<T>(prompt: &str, path: &T, assumeyes: bool) -> anyhow::Result<()>
+where
+    T: AsRef<Path>,
+{
     match assumeyes {
         true => clean(path),
         false => confirm(prompt, clean, path),
@@ -69,11 +72,10 @@ fn confirm_clean(prompt: &str, path: &Path, assumeyes: bool) -> anyhow::Result<(
 /// * `prompt`: `&str`, msg to display to the user.
 /// * `func`: `fn`, function to run if user gives an affirmative response.
 /// * `path`: `&Path`, path to run function on.
-fn confirm(
-    prompt: &str,
-    func: impl Fn(&Path) -> anyhow::Result<()>,
-    path: &Path,
-) -> anyhow::Result<()> {
+fn confirm<T>(prompt: &str, func: impl Fn(T) -> anyhow::Result<()>, path: T) -> anyhow::Result<()>
+where
+    T: AsRef<Path>,
+{
     if dialoguer::Confirm::new()
         .with_prompt(prompt)
         .interact()
@@ -88,14 +90,17 @@ fn confirm(
 /// Remove this directory.
 ///
 /// * `dir`: `&Path` path to remove.
-fn clean(dir: &Path) -> anyhow::Result<()> {
+fn clean<T>(dir: &T) -> anyhow::Result<()>
+where
+    T: AsRef<Path>,
+{
     trash::delete(dir)?;
-    dir.make_all_dirs()?;
+    crate::utils::make_all_dirs(dir)?;
 
     log::info!(
         "🗑️ {} {}",
         console::style("Cleaned").bold(),
-        console::style(dir.display()).bold().red()
+        console::style(dir.as_ref().display()).bold().red()
     );
     Ok(())
 }

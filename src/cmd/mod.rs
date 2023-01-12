@@ -29,7 +29,7 @@ impl<T: ValidateConfig> Initialize<Config, RootCmd> for T {
             Err(_) => base_dirs.config_dir().join(&root_args.config),
         };
 
-        let mut config = config::read(&config_path)?;
+        let mut config = config::read(config_path)?;
         config.root = base_dirs.data_local_dir().join("nedots");
 
         log::debug!("Raw {:#?}", config);

@@ -1,4 +1,4 @@
-use crate::{models::config::Config, utils::paths::ResolvePath};
+use crate::models::config::Config;
 
 #[derive(Debug, clap::Args)]
 pub struct InstallCmd {
@@ -13,8 +13,7 @@ impl super::ValidateConfig for InstallCmd {
     /// need to validate `sources`, etc.
     ///
     /// * `config`: mut Config
-    fn validate(&self, mut config: Config) -> anyhow::Result<Config> {
-        config = config.resolve_dirs();
+    fn validate(&self, config: Config) -> anyhow::Result<Config> {
         log::debug!("Resolved {:#?}", config);
         Ok(config)
     }
@@ -26,10 +25,10 @@ impl super::RunWith<Config> for InstallCmd {
 
         if let Some(key) = &self.key {
             if let Some(val) = config.get_sources_as_hashmap().get(key.as_str()) {
-                let dst = &val.prepend_home();
-                let src = crate::utils::join_paths(&config.dots_dir, dst);
+                let dst = crate::utils::prepend_home(val);
+                let src = crate::utils::join_paths(&config.dots_dir, &dst.to_path_buf());
 
-                crate::ops::copy(&src, dst)?;
+                crate::ops::copy(&src, &dst)?;
                 log::info!(
                     "{} `{}`",
                     SUCCESS_MSG,
@@ -40,10 +39,10 @@ impl super::RunWith<Config> for InstallCmd {
             }
         } else {
             for source in &config.sources {
-                let dst = &source.prepend_home();
-                let src = crate::utils::join_paths(&config.dots_dir, dst);
+                let dst = crate::utils::prepend_home(source);
+                let src = crate::utils::join_paths(&config.dots_dir, &dst.to_path_buf());
 
-                crate::ops::copy(&src, dst)?;
+                crate::ops::copy(&src, &dst)?;
                 log::info!(
                     "{} `{}`",
                     SUCCESS_MSG,

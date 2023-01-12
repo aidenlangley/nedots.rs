@@ -7,10 +7,13 @@ pub struct GitRepo {
 }
 
 impl GitRepo {
-    pub fn new(remote: &str, path: &Path) -> Self {
+    pub fn new<T>(remote: &str, path: T) -> Self
+    where
+        T: AsRef<Path>,
+    {
         Self {
-            remote: remote.to_string(),
-            path: path.to_path_buf(),
+            remote: remote.into(),
+            path: path.as_ref().into(),
         }
     }
 

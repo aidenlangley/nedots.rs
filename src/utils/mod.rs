@@ -1,5 +1,5 @@
 pub mod paths;
-pub use paths::join_paths;
+pub use paths::{join_paths, make_all_dirs, prepend_home, resolve_path};
 pub mod spinner;
 
 use crate::errors::Error;
