@@ -20,6 +20,20 @@ most tangible "demo", but it does give you a peek at what it does.
 - I'd avoid running this as `root`. I need to ensure that file operations are
   carried out by the correct user.
 
+## Features
+
+- Manages files & directories recursively.
+- XDG friendly!
+- (TODO) Can also handle files outside of your `$HOME` directory.
+- Can backup dotfiles for you.
+- Safely trashes files when cleaning instead of outright deleting your files.
+- One command will check all of your configuration files, check them into your
+  git repository, and push it to remote.
+- Also supports git submodules - tell `nedots` where to find your git repo, and
+  it will jump in to that directory, commit your latest changes and push them to
+  remote, before pulling them back down into your `dots` directory so that the
+  latest changes are reflected in your `nedots` git repo.
+
 ## `nedots.yml`
 
 You can find the configuration file @ `$XDG_CONFIG_HOME/nedots/nedots.yml`. If
