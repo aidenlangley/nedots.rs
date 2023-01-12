@@ -23,8 +23,6 @@ pub struct CleanCmd {
 
 impl super::RunWith<Config> for CleanCmd {
     /// Remove dots & backup directories.
-    ///
-    /// * `config`: &Config
     fn run_with(&self, config: &Config) -> anyhow::Result<()> {
         if !self.dots && !self.backups {
             confirm_clean(
